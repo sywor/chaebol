@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>Noise</title>
+	<link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+<h1>Noise</h1>
+
+<p>
+	The <b>Noise</b> node creates noise values based on the selected type and dimension.
+	Supported noise types are: Value, Perlin, Simplex Value and Simplex.
+<h3>Input:</h3>
+<table>
+	<tr>
+		<td>
+			<b>scale</b>
+		</td>
+		<td>
+			The scale of the noise. (> 1)
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<b>seed</b>
+		</td>
+		<td>
+			An offset for x and z. (lower than float.MaxValue)
+		</td>
+	</tr>
+</table>
+
+
+<h3>Output:</h3>
+<table>
+	<tr>
+		<td>
+			<b>noise</b>
+		</td>
+		<td>
+			The noise value. (between -1 an 1)
+		</td>
+	</tr>
+</table>
+
+
+<h3>Internal Request:</h3>
+Uses <i>x</i> and <i>z</i> as function parameters.
+Uses <i>seed</i> to modify the seed input.
+
+<h3 class="input">Examples:</h3>
+
+<div>Value Noise 1D scale 1</div>
+<img src="../../img/nodes/Noise/value_1d_scale_1.png">
+
+<div>Value Noise 1D scale 20</div>
+<img src="../../img/nodes/Noise/value_1d_scale_20.png">
+
+<div>Value Noise 2D scale 1</div>
+<img src="../../img/nodes/Noise/value_2d_scale_1.png">
+
+<div>Value Noise 2D scale 20</div>
+<img src="../../img/nodes/Noise/value_2d_scale_20.png">
+
+
+<div>Perlin Noise 2D scale 10</div>
+<img src="../../img/nodes/Noise/perlin_2d_scale_10.png">
+
+<div>Perlin Noise 3D scale 10</div>
+<img src="../../img/nodes/Noise/perlin_3d_scale_10.png">
+
+<div>Simplex Noise 2D scale 20</div>
+<img src="../../img/nodes/Noise/simlpex_2d_scale_20.png">
+
+<div>Simplex Value 2D scale 20</div>
+<img src="../../img/nodes/Noise/simplex_value_2d_scale_20.png">
+
+</body>
+</html>

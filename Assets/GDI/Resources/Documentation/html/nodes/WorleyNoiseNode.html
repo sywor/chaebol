@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>Worley Noise</title>
+	<link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+<h1>Worley Noise</h1>
+
+<p>
+	The <b>Worley Noise</b> node creates 2D noise values. You can
+	choose between euclidean an manhattan distance calculation or
+	select the voronoi option.
+
+
+<h3>Input:</h3>
+<table>
+	<tr>
+		<td>
+			<b>scale</b>
+		</td>
+		<td>
+			The scale of the noise. (> 1)
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<b>seed</b>
+		</td>
+		<td>
+			An offset for x and z. (lower than float.MaxValue)
+		</td>
+	</tr>
+</table>
+
+
+<h3>Output:</h3>
+<table>
+	<tr>
+		<td>
+			<b>noise</b>
+		</td>
+		<td>
+			The noise value. (between -1 an 1)
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<b>points</b>
+		</td>
+		<td>
+			The points that are used for the noise.
+		</td>
+	</tr>
+</table>
+
+
+<h3>Internal Request:</h3>
+Uses <i>x</i> and <i>z</i> as function parameters.
+Uses <i>seed</i> to modify the seed input.
+
+<h3 class="input">Examples:</h3>
+
+<div>Euclidean First scale 20</div>
+<img src="../../img/nodes/WorleyNoise/euclidean_first_scale_20.png">
+
+<div>Euclidean First scale 60</div>
+<img src="../../img/nodes/WorleyNoise/euclidean_first_scale_60.png">
+
+<div>Euclidean Second scale 20</div>
+<img src="../../img/nodes/WorleyNoise/euclidean_second_scale_20.png">
+
+<div>Euclidean Second - First scale 20</div>
+<img src="../../img/nodes/WorleyNoise/euclidean_sf_scale_20.png">
+
+<div>Euclidean Min Second - First scale 20</div>
+<img src="../../img/nodes/WorleyNoise/euclidean_minsf_scale_20.png">
+
+<div>Manhattan Second - First scale 20</div>
+<img src="../../img/nodes/WorleyNoise/manhattan_sf_scale_20.png">
+
+<div>Voronoi scale 20</div>
+<img src="../../img/nodes/WorleyNoise/voronoi_scale_20.png">
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>EntitiesNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+		<h1>EntitiesNode</h1>
+		<p> The <b>EntitiesNode</b> defines the entities that can be connected to a <a href="ChunkNode.html">ChunkNode</a>.
+			It uses a game object as entity. This entity is cloned to all positions connected to the vector socket.
+			The entities can also be scaled and rotated.
+			Notice that the scale and rotation must not be a static number but can be a noise value. For every entity it requests
+			the scale and rotation values at the entities x and z position.
+		</p>
+
+		<h3 class="input">Input:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>game object</b>
+				</td>
+				<td>
+					The game object to clone.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>positions</b>
+				</td>
+				<td>
+					The positions of the entity within the requested chunk area.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>rotation / scale</b>
+				</td>
+				<td>
+					Rotation and scale values for every entity.
+				</td>
+			</tr>
+		</table>
+
+
+		<h3 class="input">Output:</h3>
+		<table>
+			<tr>
+				<td>
+					An entities definition to be connected to a <a href="ChunkNode.html">ChunkNode</a>.
+				</td>
+			</tr>
+		</table>
+
+	</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>GradientNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+		<h1>GradientNode</h1>
+		<p> The <b>GradientNode</b> can be used to create color gradients.
+			It uses the y coordinate of the request socket for the color lookup.
+			E.g. use this node to color your height maps.
+		</p>
+
+		<h3 class="options">Options:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>add color</b>
+				</td>
+				<td>
+					Adds a new color socket as a component for the gradient.
+					Up to 8 colors are allowed due to the limitation of the
+					<a href="https://docs.unity3d.com/ScriptReference/Gradient.html">Gradient</a> class.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>x</b>
+				</td>
+				<td>
+					Removes a color component socket that is not connected.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>slider</b>
+				</td>
+				<td>
+					Moves the position of a color component in the gradient.
+				</td>
+			</tr>
+		</table>
+
+		<h3 class="input">Input:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>range scale</b>
+				</td>
+				<td>
+					Multiplies the color lookup by this number.
+					It uses the y coordinate of the request between [-1, 1].
+					E.g. use other scales than 1 if you also scaled a height map that uses this gradient.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>color</b>
+				</td>
+				<td>
+					A color component for the gradient.
+				</td>
+			</tr>
+		</table>
+
+
+		<h3 class="input">Output:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>color</b>
+				</td>
+				<td>
+					The color at the request y coordinate.
+				</td>
+			</tr>
+		</table>
+
+		<h3>Internal Request:</h3>
+		It uses the y coordinate of the request between [-1, 1] that can be scaled using 'range scale'.
+
+		<h3>Example:</h3>
+		<img src="../../img/nodes/ColorGradientNode/ColorGradientNodeExample_01.png">
+	</body>
+</html>

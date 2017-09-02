@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>ChunkNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+	<h1>ChunkNode</h1>
+	<p>
+		The <b>ChunkNode</b> defines the content of a chunk that can be created using a <a href="ChunkGeneratorNode.html">ChunkGeneratorNode</a>.
+		You can connect <a href="LandscapeNode.html">landscapes</a> and <a href="EntitiesNode.html">entities</a> to this node.
+	</p>
+
+
+	<h3 class="options">Options:</h3>
+	<table>
+		<tr>
+			<td>
+				<b>add landscape</b>
+			</td>
+			<td>
+				Adds an input socket to connect a <a href="LandscapeNode.html">landscapes</a>.
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b>add entities</b>
+			</td>
+			<td>
+				Adds an input socket to connect <a href="EntitiesNode.html">entities</a>.
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b>x</b>
+			</td>
+			<td>
+				Removes an unconnected socket.
+			</td>
+		</tr>
+	</table>
+
+
+	<h3 class="input">Input:</h3>
+	<table>
+		<tr>
+			<td>
+				<b>Landscapes</b>
+			</td>
+			<td>
+				Connect a node that returns a <a href="LandscapeNode.html">landscape</a>. You can use 0 or more inputs
+				for landscapes.
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b>Entities</b>
+			</td>
+			<td>
+				Connect a node that returns <a href="EntitiesNode.html">entities</a>. You can use 0 or more inputs
+				for entities.
+			</td>
+		</tr>
+	</table>
+
+
+	<h3 class="input">Output:</h3>
+	<table>
+		<tr>
+			<td>
+				The chunk definition.
+			</td>
+		</tr>
+	</table>
+
+	<h3>Internal Request:</h3>
+	</body>
+</html>

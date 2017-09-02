@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>How To Access From Code</title>
+	<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+<h1>How To Access From Code</h1>
+This page contains examples about the usage of GDIs graphs in your project.
+
+<ul>
+	<li>
+		<a href="#usegraph">Create A Graph Programmatically</a>
+	</li>
+
+	<li>
+		<a href="#creategraph">Use A Graph In Your Game</a>
+	</li>
+
+	<li>
+		<a href="#subscribe">Subscribe To Editor Events</a>
+	</li>
+</ul>
+
+
+<h2 id="usegraph">Use A Graph In Your Game</h2>
+The following example loads a graph at runtime and uses its chunk generator node
+to create landscapes. You can also find the script in the behaviour collection
+of GDI.
+<pre><code class="cs cscode">
+<span class="cscode-comment"><span class="cscode-doctag">///</span> This is an example how to load a graph that contains a chunk generator</span>
+<span class="cscode-comment"><span class="cscode-doctag">///</span> and how to use this generator programmatically.</span>
+<span class="cscode-comment"><span class="cscode-doctag">///</span> It also adds a 'WASD' control to the 'Main Camera'.</span>
+<span class="cscode-keyword">public</span> <span class="cscode-keyword">class</span> <span class="cscode-title">GhunkGeneratorBehaviour</span> : <span class="cscode-title">MonoBehaviour</span>
+{
+	<span class="cscode-keyword">private</span> ChunkGeneratorNode _chunkGenerator;
+	<span class="cscode-keyword">private</span> GameObject _camera;
+
+	<span class="hljs-function"><span class="cscode-keyword">void</span> <span class="cscode-title">Start</span> (<span class="hljs-params"></span>)
+	</span>{
+		<span class="cscode-comment">// Load the graph..</span>
+		<span class="cscode-keyword">string</span> filePath = Application.streamingAssetsPath + <span class="cscode-string">"/Examples/BasicLandscape.json"</span>;
+		Graph.Graph graph = Launcher.Instance.LoadGraph(filePath);
+
+		<span class="cscode-keyword">if</span> (graph == <span class="cscode-literal">null</span>)
+		{
+			Log.Error(<span class="cscode-string">"Can not find graph file "</span> + filePath);
+			<span class="cscode-keyword">return</span>;
+		}
+
+		<span class="cscode-comment">// Get the chunk generator node..</span>
+		graph.ForceUpdateNodes();
+		_chunkGenerator = (ChunkGeneratorNode) graph.GetFirstNodeWithType(<span class="cscode-keyword">typeof</span>(ChunkGeneratorNode));
+
+		<span class="cscode-keyword">if</span> (_chunkGenerator == <span class="cscode-literal">null</span>) Log.Error(<span class="cscode-string">"Can not find a chunk generator node in the graph."</span>);
+
+		<span class="cscode-comment">// Get the main camera.</span>
+		_camera = GameObject.Find(<span class="cscode-string">"Main Camera"</span>);
+		<span class="cscode-keyword">if</span> (_camera == <span class="cscode-literal">null</span>)
+		{
+			Log.Error(<span class="cscode-string">"Can not camera with the name 'Main Camera'."</span>);
+			<span class="cscode-keyword">return</span>;
+		}
+
+		_camera.AddComponent&lt;KeyboardControls&gt;();
+
+		Debug.Log(<span class="cscode-string">"OnStart"</span>);
+	}
+
+
+	<span class="hljs-function"><span class="cscode-keyword">void</span> <span class="cscode-title">Update</span> (<span class="hljs-params"></span>)</span>
+	{
+		<span class="cscode-keyword">if</span> (_chunkGenerator != <span class="cscode-literal">null</span> &amp;&amp; _camera != <span class="cscode-literal">null</span>)
+		{
+			<span class="cscode-comment">// Update and request chunks...</span>
+			_chunkGenerator.UpdateChunks();
+			_chunkGenerator.RequestChunks(_camera.transform.position);
+		}
+	}
+}
+</code></pre>
+
+<h2 id="creategraph">Create A Graph Programmatically</h2>
+Graphs can be created directly by a script. The following example creates a graph
+with some standard nodes. You can also find the script in the behaviour collection
+of GDI.
+
+<pre><code class="cs cscode"><span class="cscode-comment"><span class="cscode-doctag">///</span> This class shows how to create graphs programmatically.</span>
+<span class="cscode-keyword">public</span> <span class="cscode-keyword">class</span> <span class="cscode-title">GraphByScriptBehaviour</span> : <span class="cscode-title">MonoBehaviour</span>
+{
+
+	<span class="hljs-function"><span class="cscode-keyword">void</span> <span class="cscode-title">Start</span> (<span class="hljs-params"></span>) </span>
+	{
+
+		<span class="cscode-comment">// create the graph</span>
+		Graph.Graph graph = <span class="cscode-keyword">new</span> Graph.Graph();
+
+		<span class="cscode-comment">// create an operator node</span>
+		<span class="cscode-keyword">var</span> operator01 = (NumberOperatorNode) graph.CreateNode&lt;NumberOperatorNode&gt;();
+		operator01.X = <span class="cscode-number">200</span>;
+		operator01.Y = <span class="cscode-number">40</span>;
+		operator01.SetMode(Operator.Add);
+		graph.AddNode(operator01);
+
+		<span class="cscode-comment">// create a display node</span>
+		<span class="cscode-keyword">var</span> diplay01 = (NumberDisplayNode) graph.CreateNode&lt;NumberDisplayNode&gt;();
+		diplay01.X = <span class="cscode-number">330</span>;
+		diplay01.Y = <span class="cscode-number">80</span>;
+		graph.AddNode(diplay01);
+
+		<span class="cscode-comment">// link output and input sockets at the the index 0</span>
+		graph.Link(
+			(InputSocket) diplay01.GetSocket(<span class="cscode-keyword">typeof</span>(INumberConnection), <span class="cscode-keyword">typeof</span>(InputSocket), <span class="cscode-number">0</span>),
+			(OutputSocket) operator01.GetSocket(<span class="cscode-keyword">typeof</span>(INumberConnection), <span class="cscode-keyword">typeof</span>(OutputSocket), <span class="cscode-number">0</span>));
+
+		<span class="cscode-comment">// cerate a perlin noise node</span>
+		<span class="cscode-keyword">var</span> perlinNoise = graph.CreateNode&lt;UnityPerlinNoiseNode&gt;();
+		perlinNoise.X = <span class="cscode-number">80</span>;
+		perlinNoise.Y = <span class="cscode-number">250</span>;
+		graph.AddNode(perlinNoise);
+
+		<span class="cscode-comment">// create a display map node</span>
+		<span class="cscode-keyword">var</span> displayMap = graph.CreateNode&lt;DisplayMapNode&gt;();
+		displayMap.X = <span class="cscode-number">300</span>;
+		displayMap.Y = <span class="cscode-number">280</span>;
+		graph.AddNode(displayMap);
+
+		<span class="cscode-comment">// link the nodes</span>
+		graph.Link(
+			(InputSocket) displayMap.GetSocket(<span class="cscode-keyword">typeof</span>(INumberConnection), <span class="cscode-keyword">typeof</span>(InputSocket), <span class="cscode-number">0</span>),
+			(OutputSocket) perlinNoise.GetSocket(<span class="cscode-keyword">typeof</span>(INumberConnection), <span class="cscode-keyword">typeof</span>(OutputSocket), <span class="cscode-number">0</span>));
+
+
+		<span class="cscode-comment">// to test the serialization...</span>
+
+		<span class="cscode-comment">// create a json out of the graph</span>
+		<span class="cscode-keyword">var</span> serializedJSON = graph.ToJson();
+		<span class="cscode-comment">// dezeiralize the json back to a graph</span>
+		<span class="cscode-keyword">var</span> deserializedGraph = Graph.Graph.FromJson(serializedJSON);
+
+		<span class="cscode-comment">// add the graph to the launcher to see it in the editor.</span>
+		Launcher.Instance.AddGraph(deserializedGraph);
+	}
+
+	<span class="hljs-function"><span class="cscode-keyword">void</span> <span class="cscode-title">Update</span> (<span class="hljs-params"></span>) </span>{}
+}
+</code></pre>
+
+
+<h2 id="subscribe">Subscribe To Editor Events</h2>
+You can subscribe to editor events using the static <b>EventManager</b> class. This events are
+usually triggered by editing a graph in the editor window. The following example shows a
+register method that that you can call in the <b>OnEnable</b> or <b>OnStart</b> method of Unity.
+Take a look at the <b>EventManager</b> class to find the signatures of the methods you want to implement.
+<pre><code class="cs cscode">
+<span class="hljs-function"><span class="cscode-keyword">public</span> <span class="cscode-keyword">void</span> <span class="cscode-title">Register</span>(<span class="hljs-params"></span>)
+</span>{
+	EventManager.OnCreateGraph += OnCreate;
+	EventManager.OnFocusGraph += OnFocus;
+	EventManager.OnCloseGraph += OnClose;
+	EventManager.OnLinkEdge += OnLink;
+	EventManager.OnUnLinkSockets += OnUnLink;
+	EventManager.OnUnLinkedSockets += OnUnLinked;
+	EventManager.OnAddedNode += OnNodeAdded;
+	EventManager.OnNodeRemoved += OnNodeRemoved;
+	EventManager.OnChangedNode += OnNodeChanged;
+	EventManager.OnFocusNode += OnFocusNode;
+	EventManager.OnEditorWindowOpen += OnWindowOpen;
+	EventManager.OnNodeRenamed += OnNodeRenamed;
+	}
+
+<span class="hljs-function"><span class="cscode-keyword">public</span> <span class="cscode-keyword">void</span> <span class="cscode-title">OnLink</span>(<span class="hljs-params">Graph graph, Edge edge</span>)
+</span>{
+	Log.Info(<span class="cscode-string">"OnLink: Node "</span> + edge.Output.Parent.Id + <span class="cscode-string">" with Node "</span> + edge.Input.Parent.Id);
+	}
+
+	<span class="cscode-comment">// ...</span>
+</code></pre>
+
+</body>
+</html>

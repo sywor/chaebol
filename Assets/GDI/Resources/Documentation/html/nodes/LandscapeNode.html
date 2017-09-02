@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>LandscapeNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+		<body>
+		<h1>LandscapeNode</h1>
+		<p> The <b>LandscapeNode</b> defines a landscape mesh by its height map, vertex colors, material
+			and height factor. It can be connected to a <a href="ChunkNode.html">ChunkNode</a> to create a landscape.
+		</p>
+
+		<h3 class="input">Input:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>height map</b>
+				</td>
+				<td>
+					The height map of the landscape. Usually values between [-1, 1].
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>vertex color</b>
+				</td>
+				<td>
+					The color or color gradient for the vertex colors of the landscape mesh.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>material</b>
+				</td>
+				<td>
+					The material for the landscape mesh. Notice: in order to see the
+					colors you need a material with a shader that handles vertex colors.
+					E.g. you can also use a shader that uses the color as an identifier of the
+					texture to use.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>height factor</b>
+				</td>
+				<td>
+					A factor for the height of the height map values.
+				</td>
+			</tr>
+		</table>
+
+
+		<h3 class="input">Output:</h3>
+		<table>
+			<tr>
+				<td>
+					The landscape definition that can be connected to a <a href="ChunkNode.html">ChunkNode</a>.
+				</td>
+			</tr>
+		</table>
+
+	</body>
+</html>

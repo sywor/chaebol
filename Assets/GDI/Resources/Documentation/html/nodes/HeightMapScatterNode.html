@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>HeightMapScatterNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+		<h1>HeightMapScatterNode</h1>
+		<p> The <b>HeightMapScatterNode</b> scatters parts of a height map to a new height map.
+			E.g. it can be used to scatter masks over your landscape. Notice the performance
+			information of the 'fade option'.
+		</p>
+
+		<h3 class="options">options:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>fade</b>
+				</td>
+				<td>
+					If fade is checked it fades the scattered height map parts using the mask.
+					It if is not checked the node tests if a scattered height map part is completely
+					covered by the mask. Notice: this is very computing intensive and can impact
+					performance significantly.
+				</td>
+			</tr>
+		</table>
+
+
+
+		<h3 class="input">Input:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>value</b>
+				</td>
+				<td>
+					The height map value to scatter parts from.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>width</b>
+				</td>
+				<td>
+					The width of the part to scatter.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>height</b>
+				</td>
+				<td>
+					The height of the part to scatter.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>vec</b>
+				</td>
+				<td>
+					The the positions to scatter to.
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<b>mask</b>
+				</td>
+				<td>
+					A mask where to scatter to.
+					It is recommended to use a mask for a better performance. The mask avoids
+					to request height map parts at the masked x, z coordinate.
+				</td>
+			</tr>
+		</table>
+
+
+		<h3 class="input">Output:</h3>
+		<table>
+			<tr>
+				<td>
+					The height map with scattered height map parts.
+				</td>
+			</tr>
+		</table>
+
+		<h3 class="input">Example:</h3>
+		<img src="../../img/nodes/HeightMapScatterNode/HeightMapScatterExample_01.png">
+
+	</body>
+</html>

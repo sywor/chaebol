@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>Node Types</title>
+		<link rel="stylesheet" href="../css/styles.css">
+	</head>
+	<body>
+		<h1>Advanced Usage</h1>
+
+		This page contains the following topics:
+		<ul>
+			<li>
+				<a href="#connectiontypes">Connection Types</a>
+			</li>
+
+			<li>
+				<a href="#requestparameter">Request Parameter</a>
+			</li>
+
+			<li>
+				<a href="#customevaluation">Custom Graph Evaluation</a>
+			</li>
+		</ul>
+
+
+		<h3 id="connectiontypes">Connection Types</h3>
+		<p>
+			To create a custom connection type for your nodes you need to write a simple interface class
+			that defines the the request method of this connection. For example the <b>IColorConnection</b>
+			interface can return a color and expects an request parameter to compute it. All nodes implementing that interface
+			are able to return colors.
+		</p>
+
+<pre><code class="cs cscode"><span class="cscode-keyword">public</span> <span class="cscode-keyword">interface</span> <span class="cscode-title">IColorConnection</span>
+{
+	<span class="hljs-function">Color <span class="cscode-title">GetColor</span>(<span class="hljs-params">OutputSocket socket, Request request</span>)</span>;
+}
+</code></pre>
+		<p>
+			The <b>OutputSocket</b> parameter tells the implementing node which output socket is requested. This is useful
+			if your node contains multiple output sockets of the same connection type.
+		</p>
+		<p>
+			In GDI every connection type has its own edge color for a better overview in the editor. The information about
+			the color is obtained in the <b>Node.cs</b> class. To register a color for your custom connection find the
+			static method <b>GetEdgeColor</b> in this class.
+		</p>
+
+<pre><code class="cs">public static Color GetEdgeColor(Type connectionType)
+{
+	// ...
+	if (connectionType == typeof(IColorConnection)) return AbstractColorNode.EdgeColor;
+	// ...
+}
+</code></pre>
+
+	<p>
+		The method maps a connection type to its color and returns it. In the case of the <b>IColorConnection</b> a static
+		member of <b>AbstractColorNode</b> is used for the color. You could also directly return a color here or write
+		an abstract class for your custom connection that contains the color.
+	</p>
+
+		<h3>Abstract Node Classes</h3>
+		<p>
+			You can write an abstract class for custom connection types as well. This classes are just helper classes that are
+			optional. They usually have a static helper function for the connection type and can contain the edge color.
+			Take a look at the existing abstract node classes if you like but you do not have to use them.
+		</p>
+
+		<h3 id="requestparameter">Request Parameter</h3>
+		<p>
+			Every connection interface should contain the request parameter in its method signature. Based on this
+			parameter the node computes its return value.
+		</p>
+
+<pre><code class="cs">public struct Request
+{
+	public float X;
+	public float Y;
+	public float Z;
+	public float Seed;
+	public float SizeX;
+	public float SizeY;
+	public float SizeZ;
+}</code></pre>
+
+	<p>
+		Keep in mind that a connection type can have its own interpretation of the request parameter but
+		should be compatible with other nodes.
+	</p>
+	<p>
+		For example: nodes that are implementing the <b>IColorConnection</b> interface usually bypassing the
+		parameter and do not use it. One exception is the <a href="nodes/GradientNode.html">GradientNode</a>.
+		It uses the <i>Y</i> field of the request parameter to return the gradient color at this position.
+	</p>
+	<p>
+		Nodes that are returning numbers and implementing the <b>INumberConnection</b> interface often use the parameter.
+		For example: the <a href="nodes/NoiseNode.html">NoiseNode</a> can return float values in 2 dimensions. For that
+		reason the <i>X</i> and <i>Z</i> parameter is used. A node that creates a map of noise values like the
+		<a href="nodes/DisplayMapNode.html">DisplayMapNode</a> simply requests a connected noise node for every position
+		of the map. If also requests a connected gradient color node for every received number as the <i>Y</i> parameter.
+	</p>
+
+	<blockquote>
+		Why do number nodes not return an array of numbers using <i>SizeX</i> and <i>SizeZ?</i>
+		This is to avoid creating array instances for each node. We also can not create the array in
+		one root node and just return the reference because of thread safety.
+	</blockquote>
+
+	<p>
+		If you want to create custom connection types that are working well with the existing nodes you
+		need to take a look how they are using the request parameter. You could also add more members to the
+		request parameter but sometimes it is better to use one of the exiting ones in a clever, compatible way.
+	</p>
+
+		<h3 id="customevaluation">Custom Graph Evaluation</h3>
+		<p>
+			Writing a custom graph update and parse logic is an advanced topic. GDI implements a directed graph
+			without cyclic dependencies.
+		</p>
+		<p>
+			A cyclic dependency is defined like this: A cyclic dependency should be detected if any OutputSocket
+			of a Node has a indirect/direct path to any of its InputSockets. The path leads through OutputSockets only.
+		</p>
+		<p>
+			A cyclic dependency could lead to the situation that a node requests a value that is based on the
+			same request. This would lead to a recursive request call and cause Unity to crash.
+		</p>
+		<p>
+			If you create a custom graph evaluation logic you need to be aware of issues like cyclic dependency.
+			There are uses cases where you want to allow cycles anyway and evaluate the request values step by step.
+			Take a look at the <b>StandardGraphController</b> class to find out more about the updating logic. Also take
+			a look at the <b>Graph</b> class where you find the logic of parsing the graph, detecting cycles and allow/deny
+			socket links.
+		</p>
+	</body>
+</html>

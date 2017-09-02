@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>GridScatterNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+		<h1>GridScatterNode</h1>
+		<p> The <b>GridScatterNode</b> creates a grid of positions using the x and y scale as distance.
+			E.g. you can use a <a href="RamdomOffsetNode.html">RandomOffsetNode</a> to randomly scatter
+			the positions.
+		</p>
+
+		<h3 class="input">Input:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>scale x</b>
+				</td>
+				<td>
+					The positions x distance in the grid.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>scale z</b>
+				</td>
+				<td>
+					The positions z distance in the grid.
+				</td>
+			</tr>
+		</table>
+
+
+		<h3 class="input">Output:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>positions</b>
+				</td>
+				<td>
+					The positions of the grid.
+				</td>
+			</tr>
+		</table>
+
+		<h3>Internal Request:</h3>
+		Uses the x and z coordinate of a request for the position. Uses the sizeX and sizeZ values
+		for the range of the gird.
+	</body>
+</html>

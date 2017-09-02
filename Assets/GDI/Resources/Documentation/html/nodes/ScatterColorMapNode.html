@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>ScatterColorMapNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+		<h1>ScatterColorMapNode</h1>
+		<p> The <b>ScatterColorMapNode</b> scatters grey scaled color maps a height map.
+			Notice the performance information of the 'fade option'.
+		</p>
+
+		<h3 class="options">options:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>fade</b>
+				</td>
+				<td>
+					If fade is checked it fades the scattered color maps using the mask.
+					It if is not checked the node tests if a color map is completely
+					covered by the mask. Notice: this is very computing intensive and can impact
+					performance significantly.
+				</td>
+			</tr>
+		</table>
+
+		<h3 class="input">Input:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>map</b>
+				</td>
+				<td>
+					The color map to scatter.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>vec</b>
+				</td>
+				<td>
+					The the positions to scatter to.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>mask</b>
+				</td>
+				<td>
+					A mask where to scatter to.
+					It is recommended to use a mask for a better performance. The mask avoids
+					to request color maps at the masked x, z coordinate.
+				</td>
+			</tr>
+		</table>
+
+
+		<h3 class="input">Output:</h3>
+		<table>
+			<tr>
+				<td>
+					The height map with the scattered color maps.
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

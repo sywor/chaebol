@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>CreateColorMapFromHeightMapNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+		<h1>CreateColorMapFromHeightMapNode</h1>
+		<p>
+			The <b>CreateColorMapFromHeightMapNode</b> creates a color map from a height map.
+		</p>
+
+		<h3 class="input">Input:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>value</b>
+				</td>
+				<td>
+					The height map values.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>width</b>
+				</td>
+				<td>
+					The width of the resulting color map.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>height</b>
+				</td>
+				<td>
+					The height of the resulting color map.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>color</b>
+				</td>
+				<td>
+					The color for the height map values. Can also use a <a href="GradientNode.html">GradientNode</a>.
+				</td>
+			</tr>
+		</table>
+
+
+		<h3 class="input">Output:</h3>
+		<table>
+			<tr>
+				<td>
+					The color map.
+				</td>
+			</tr>
+		</table>
+
+		<h3 class="request">Internal Request:</h3>
+		Requests the connected value socket for x and z within the width and height.
+		Requests the connected color socket using y as the height map value.
+
+		<h3 class="input">Example:</h3>
+		<img src="../../img/nodes/CreateColorFromHeightMapNode/CreateColorFromHeightMapNode_01.png">
+	</body>
+</html>

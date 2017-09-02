@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>BorderNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+	<h1>BorderNode</h1>
+	<p>
+		The <b>BorderNode</b> can be used to create borders based on noise values.
+		For every requested value it checks the neighbours with a distance of <i>width</i>.
+		If a neighbour value lies between <i>top</i> and <i>bottom</i> its distance or 1
+		will be returned.
+	</p>
+
+	<h3 class="input">Input:</h3>
+	<table>
+		<tr>
+			<td>
+				<b>noise</b>
+			</td>
+			<td>
+				The noise value to create borders.
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				<b>width</b>
+			</td>
+			<td>
+				The width to check for neighbours. Notice: high values are leading to
+				many neighbour checks. This can impact performance significantly.
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				<b>top</b>
+			</td>
+			<td>
+				The top value to take as a border source. Usually between -1 and 1. Higher than bottom.
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b>bottom</b>
+			</td>
+			<td>
+				The bottom value to take as a border source. Usually between -1 and 1. Lower than top.
+			</td>
+		</tr>
+	</table>
+
+
+	<h3 class="input">Output:</h3>
+	<table>
+		<tr>
+			<td>
+				-1 values for non borders. Everything else is a border.
+			</td>
+		</tr>
+	</table>
+
+	<h3 class="example">Example:</h3>
+	<img src="../../img/nodes/BorderNode/BorderNodeExample_01.png">
+</html>

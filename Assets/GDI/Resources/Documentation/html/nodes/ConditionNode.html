@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>ConditionNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+		<h1>ConditionNode</h1>
+		<p>
+			The <b>ConditionNode</b> can be used for a numeric condition.
+			If the value <i>x</i> is lower than 0 it returns the first sockets value.
+			Otherwise it returns the second sockets value.
+			You can use this node to improve the performance because only one
+			of the input sockets are requested.
+
+		</p>
+
+		<h3 class="input">Input:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>first value</b>
+				</td>
+				<td>
+					Is returned if x is lower than 0.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>second value</b>
+				</td>
+				<td>
+					Is returned if x is higher or equal 0.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>x</b>
+				</td>
+				<td>
+					The condition value.
+				</td>
+			</tr>
+		</table>
+
+
+		<h3 class="input">Output:</h3>
+		<table>
+			<tr>
+				<td>
+					The first or second sockets value depending on x.
+				</td>
+			</tr>
+		</table>
+
+	</body>
+</html>

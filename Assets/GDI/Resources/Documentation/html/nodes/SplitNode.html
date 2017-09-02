@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>SplitNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+		<h1>SplitNode</h1>
+		<p> The <b>SplitNode</b> splits positions using a mask.
+		</p>
+
+		<h3 class="input">Input:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>vec</b>
+				</td>
+				<td>
+					The positions to split.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>mask</b>
+				</td>
+				<td>
+					The mask to use.
+				</td>
+			</tr>
+		</table>
+
+
+		<h3 class="input">Output:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>&#62 = 0</b>
+				</td>
+				<td>
+					Positions where the mask is &#62 = 0
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>&#60 0</b>
+				</td>
+				<td>
+					Positions where the mask is &#60 0
+				</td>
+			</tr>
+		</table>
+
+	<h3>Internal request:</h3>
+	Uses the x and z coordinate of the positions to request the mask value.
+	</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>SharpenNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+		<h1>SharpenNode</h1>
+		<p> The <b>SharpenNode</b> sharpens a height map using <i>Math.Tanh(value * intensity)</i>
+			E.g. it can be used to create masks with a more sharpened edge.
+		</p>
+
+		<h3 class="input">Input:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>noise</b>
+				</td>
+				<td>
+					The noise to sharpen.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>intensity</b>
+				</td>
+				<td>
+					The intensity to sharpen.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>threshold</b>
+				</td>
+				<td>
+					The threshold to apply maximum values.
+				</td>
+			</tr>
+		</table>
+
+
+		<h3 class="input">Output:</h3>
+		<table>
+			<tr>
+				<td>
+					The sharpened noise.
+				</td>
+			</tr>
+		</table>
+
+		<h3>Example:</h3>
+		<img src="../../img/nodes/SharpenNode/SharpenNodeExample_01.png">
+
+	</body>
+</html>

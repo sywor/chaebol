@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>Gradient Step</title>
+	<link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+
+	<h1>Gradient Step</h1>
+
+	<p>
+		The <b>Gradient Step</b> can be used to create steps
+		in height maps.
+		You can adjust the gradient factor to get smooth transitions
+		between the steps.
+
+		<h3 class="input">Input:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>value</b>
+				</td>
+				<td>
+					The height map value
+					to create steps.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>steps</b>
+				</td>
+				<td>
+					The count of steps.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>gradient factor</b>
+				</td>
+				<td>
+					A value between 0 an 1 for the size of the gradient.
+				</td>
+			</tr>
+		</table>
+
+
+	<h3 class="input">Output:</h3>
+	<table>
+		<tr>
+			<td>
+				<b>value</b>
+			</td>
+			<td>
+				The stepped value.
+			</td>
+		</tr>
+	</table>
+
+	<h3>Internal Request:</h3>
+	Uses <i>x</i> and <i>z</i> as height map positions.
+
+	<h3 class="input">Examples:</h3>
+
+	<div>steps: 5 gradient: 0</div>
+	<img src="../../img/nodes/GradientStepNode/mapStep5Gradient0.png">
+	<img src="../../img/nodes/GradientStepNode/profileStep5Gradient0.png">
+
+
+	<div>steps: 5 gradient: 0.5</div>
+	<img src="../../img/nodes/GradientStepNode/mapStep5Gradient05.png">
+	<img src="../../img/nodes/GradientStepNode/profileStep5Gradient05.png">
+
+
+
+	<div>steps: 5 gradient: 1</div>
+	<img src="../../img/nodes/GradientStepNode/mapStep5Gradient1.png">
+	<img src="../../img/nodes/GradientStepNode/profileStep5Gradient1.png">
+
+
+	<div class="after-box"></div>
+</body>
+</html>

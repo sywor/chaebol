@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>Get Started</title>
+	<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+<h1>Get Started</h1>
+
+
+<ul>
+	<li>
+		<a href="#installation">Installation</a>
+	</li>
+
+	<li>
+		<a href="#controls">Controls</a>
+	</li>
+
+	<li>
+		<a href="#behaviours">Behaviours</a>
+	</li>
+
+	<li>
+		<a href="#performance">Performance</a>
+	</li>
+</ul>
+
+
+<h2 id="installation">Installation</h2>
+<p>Import the GDI package in Unity by clicking <b>Assets -> Import Package -> Custom Package</b>. Select the package in the
+popup and import all contained files.</p>
+
+<p>Your projects 'Asset' folder should now contain an folder called 'Editor' containing the file <b>GDIWindow</b>. In the main menu of Unity select
+<b>Window -> GDI</b> to open the editor window.</p>
+
+<p>In the editor window click <b>Graph -> Open</b> to open one of the existing examples or <b>Graph -> New</b> to create a new Graph.</p>
+
+<h2 id="controls">Controls</h2>
+	<table>
+		<tr>
+			<td><b>Middle mouse button + drag</b></td>
+			<td>Drag the canvas.</td>
+		</tr>
+
+		<tr>
+
+			<td><b>Scroll</b></td>
+			<td> Zoom the canvas.</td>
+		</tr>
+
+		<tr>
+			<td><b>Right click on canvas</b></td>
+			<td>Open node adding conext menu.</td>
+		</tr>
+
+		<tr>
+			<td><b>Right click on node</b></td>
+			<td>Open node conext menu.</td>
+		</tr>
+
+		<tr>
+			<td><b>Left click on node</b></td>
+			<td>Select node.</td>
+		</tr>
+
+		<tr>
+			<td><b>Left click on node + drag</b></td>
+			<td>Move node.</td>
+		</tr>
+
+		<tr>
+			<td><b>Left click on canvas + drag</b></td>
+			<td>Selection box.</td>
+		</tr>
+
+		<tr>
+			<td><b>Left click on node + shift</b></td>
+			<td>Add node to selection.</td>
+		</tr>
+
+		<tr>
+			<td><b>Left click on edge</b></td>
+			<td>Add edge path point.</td>
+		</tr>
+
+		<tr>
+			<td><b>Drag edge path point</b></td>
+			<td>Move egde path point.</td>
+		</tr>
+
+		<tr>
+			<td><b>Right click on edge path point</b></td>
+			<td>Remove point.</td>
+		</tr>
+
+		<tr>
+			<td><b>Press 0</b></td>
+			<td>Reset zoom.</td>
+		</tr>
+	</table>
+
+<h2 id="behaviours">Behaviours</h2>
+<p>To start using the editor with your script take a look at the folder <b>Assets/GDI/Behaviour/</b>. Simply add a behavior as a component
+	to a GameObject in the scene. Take a look at the source code of the behaviour and read its documentation.</p>
+
+<h2 id="performance">Performance</h2>
+This tool gives you the freedom to create complex graphs that can lead to heavy computations.
+This can cause Unity to freeze or even crash. Make sure to frequently save your progress to avoid
+loss of work. Read the node help text to learn more about performance optimizations of your graphs.
+Take a look at the standard patterns to find solutions for common use cases.
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="css/styles.css">
+	<title>GDI</title>
+</head>
+<body>
+
+	<img src="img/GDI_Logo.png">
+	<h1>Graph Development Interface</h1>
+
+
+	<h2>Overview</h2>
+	<p>
+		GDI is a graph editor for Unity available at the <a href="	https://www.assetstore.unity3d.com/#!/content/72081">
+		Asset Store	</a>
+		. It enables you to dynamically edit parts of your project logic by combining
+		nodes using a visual editor. Game designers can manipulate calculations to easily balance your game without
+		writing on line of code. GDI already contains a set of nodes to define and create complex procedural landscapes.
+	</p>
+
+	<p>
+		Writing new nodes is simple and the GDIs API is well documented. It helps you focusing on programming the
+		game logic and offers you the flexibility of a visual graph editor. All graphs are serialized as a human readable
+		json file that works well with your version control software.
+	</p>
+
+	<p>
+		Requesting node results is designed to be thread save and you can evaluate the graphs live in edit and play mode.
+		This enables you to easily change the behaviour of the game and helps to reduce iteration times.
+	</p>
+
+	<p>
+		Requesting node results is designed to be thread save and you can evaluate the graphs live in edit and play mode.
+		This enables you to easily change the behaviour of the game and helps to reduce iteration times.
+	</p>
+
+	<p>
+		Take a look at the at the <a href="#features">feature list</a>, get started reading the <a href="#documentation">documentation</a> and
+		browse through the existing <a href="#nodes">nodes</a>.
+
+	</p>
+
+	<iframe width="560" height="315" src="https://www.youtube.com/embed/fSIyl1mcq2s?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
+
+	<h2 id="features">Features</h2>
+	<ul>
+		<li>
+			<b>Userfriendly UI</b><br>
+			The editor UI is easy to use and intuitive. Nodes can collapsed and expanded for better overview.
+		</li>
+		<li><b>Easy Extendable</b><br>
+			Writing custom nodes is very comfortable due to the consistent API.
+		</li>
+
+		<li><b>Well Documented</b><br>
+			Node functionality as is documented as well as the usage of GDI from code.
+		</li>
+		<li><b>Thread Save Graph Results</b><br>
+			Request for graph results can be made from multiple threads simultaneously.
+		</li>
+		<li><b>Human Readable Json File Format</b><br>
+			Graphs are serialized using a human readable json format that can be used everywhere in your production pipeline.
+		</li>
+		<li><b>Live in playmode and editmode</b><br>
+			Edit the graph and see the effects live in playmode and editmode.
+		</li>
+		<li><b>Non-Blocking Editor</b><br>
+			Preview nodes are using threads to update their data to avoid freeze frames in the editor.
+		</li>
+		<li><b>Edge Path Editing</b><br>
+			Edges can be drawn using spline paths for better overview.
+		</li>
+		<li><b>Direct Input Values</b><br>
+			Numbers can be set directly into the node sockets to avoid unnecessary complex graphs.
+		</li>
+		<li><b>Focus On Procedural Landscapes</b><br>
+			Numerous nodes to create interesting landscapes: Combine Worley, Simplex, Perlin, Value or Voronioi noise using
+			an Octave node. Scatter positions based on landscape masks an use them as transforms positions for your GameObjects.
+			Many more opportunities..
+		</li>
+		<li><b>Chunk Mesh Generator Node</b><br>
+			Chunk generator node that creates landscape meshes based on your height map, color and material nodes.
+		</li>
+		<li><b>Image Processing</b><br>
+			Load manipulate and save textures.
+		</li>
+	</ul>
+
+	<h2 id="documentation">Documentation</h2>
+	<h3>Usage</h3>
+	<ul>
+		<li>
+			<a href="html/GetStarted.html">Get Started</a>
+
+			<ul>
+				<li>
+					<a href="html/GetStarted.html#installation">Installation</a>
+				</li>
+				<li>
+					<a href="html/GetStarted.html#controls">Controls</a>
+				</li>
+				<li>
+					<a href="html/GetStarted.html#performance">Performance</a>
+				</li>
+			</ul>
+
+		</li>
+		<li>
+			<a href="html/HowToAccess.html">How To Access From Code</a>
+
+			<ul>
+				<li>
+					<a href="html/HowToAccess.html#usegraph">Use A Graph In Your Game</a>
+				</li>
+				<li>
+					<a href="html/HowToAccess.html#creategraph">Create A Graph Programmatically</a>
+				</li>
+				<li>
+					<a href="html/HowToAccess.html#subscribe">Subscribe To Editor Events</a>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<a href="html/WriteNodes.html">How To Write A Custom Node</a>
+			<ul>
+				<li>
+					<a href="html/WriteNodes.html#createtheclass">Create The Class</a>
+				</li>
+				<li>
+					<a href="html/WriteNodes.html#implement">Implement The Functionality</a>
+				</li>
+				<li>
+					<a href="html/WriteNodes.html#addthenode">Add The Node To The Editor</a>
+				</li>
+				<li>
+					<a href="html/WriteNodes.html#requestparameter">Understand The Request Parameter</a>
+				</li>
+				<li>
+					<a href="html/WriteNodes.html#serialization">Make The Node Persistent</a>
+				</li>
+				<li>
+					<a href="html/WriteNodes.html#threadsafe">Be Thread Safe</a>
+				</li>
+				<li>
+					<a href="html/WriteNodes.html#nodetypes">Use Other Node Types</a>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<a href="html/AdvancedUsage.html">Advanced Usage</a>
+			<ul>
+				<li>
+					<a href="html/AdvancedUsage.html#connectiontypes">Connection Types</a>
+				</li>
+
+				<li>
+					<a href="html/AdvancedUsage.html#requestparameter">Request Parameter</a>
+				</li>
+
+				<li>
+					<a href="html/AdvancedUsage.html#customevaluation">Custom Graph Evaluation</a>
+				</li>
+			</ul>
+		</li>
+
+		<li>
+			<a href="html/ProceduralLandscapeGeneration.html">Procedural Landscape Generation</a>
+		</li>
+
+	</ul>
+
+	<h3 id="nodes">Nodes</h3>
+	<p>You can also right click on a node and select 'help' to open its documentation.</p>
+
+	<a href="html/nodes/ChunkGeneratorNode.html">ChunkGeneratorNode</a><br>
+	<a href="html/nodes/ChunkNode.html">ChunkNode</a><br>
+	<a href="html/nodes/EntitiesNode.html">EntitiesNode</a><br>
+	<a href="html/nodes/LandscapeNode.html">LandscapeNode</a><br>
+	<a href="html/nodes/ColorComponentsNode.html">ColorComponentsNode</a><br>
+	<a href="html/nodes/ColorGrayScaleNode.html">ColorGrayScaleNode</a><br>
+	<a href="html/nodes/ColorNode.html">ColorNode</a><br>
+	<a href="html/nodes/GradientNode.html">GradientNode</a><br>
+	<a href="html/nodes/InvertColorNode.html">InvertColorNode</a><br>
+	<a href="html/nodes/MixColorNode.html">MixColorNode</a><br>
+	<a href="html/nodes/ColorMapFilterNode.html">ColorMapFilterNode</a><br>
+	<a href="html/nodes/CreateColorMapFromHeightMapNode.html">CreateColorMapFromHeightMapNode</a><br>
+	<a href="html/nodes/CreateColorMapFromPixelNode.html">CreateColorMapFromPixelNode</a><br>
+	<a href="html/nodes/DisplayColorMapNode.html">DisplayColorMapNode</a><br>
+	<a href="html/nodes/ScatterColorMapNode.html">ScatterColorMapNode</a><br>
+	<a href="html/nodes/DisplayMapNode.html">DisplayMapNode</a><br>
+	<a href="html/nodes/DisplayProfileNode.html">DisplayProfileNode</a><br>
+	<a href="html/nodes/GameObjectNode.html">GameObjectNode</a><br>
+	<a href="html/nodes/GameObjectPropertiesNode.html">GameObjectPropertiesNode</a><br>
+	<a href="html/nodes/BorderNode.html">BorderNode</a><br>
+	<a href="html/nodes/CircleNode.html">CircleNode</a><br>
+	<a href="html/nodes/GradientStepNode.html">GradientStepNode</a><br>
+	<a href="html/nodes/HeightMapScatterNode.html">HeightMapScatterNode</a><br>
+	<a href="html/nodes/NoiseNode.html">NoiseNode</a><br>
+	<a href="html/nodes/OctaveNode.html">OctaveNode</a><br>
+	<a href="html/nodes/SharpenNode.html">SharpenNode</a><br>
+	<a href="html/nodes/SineMapNode.html">SineMapNode</a><br>
+	<a href="html/nodes/SmoothStepNode.html">SmoothStepNode</a><br>
+	<a href="html/nodes/UnityPerlinNoiseNode.html">UnityPerlinNoiseNode</a><br>
+	<a href="html/nodes/WorleyNoiseNode.html">WorleyNoiseNode</a><br>
+	<a href="html/nodes/MaterialNode.html">MaterialNode</a><br>
+	<a href="html/nodes/AbsNode.html">AbsNode</a><br>
+	<a href="html/nodes/ConditionNode.html">ConditionNode</a><br>
+	<a href="html/nodes/NaNNode.html">NaNNode</a><br>
+	<a href="html/nodes/PiNode.html">PiNode</a><br>
+	<a href="html/nodes/CurveNode.html">CurveNode</a><br>
+	<a href="html/nodes/LimitNode.html">LimitNode</a><br>
+	<a href="html/nodes/MixNode.html">MixNode</a><br>
+	<a href="html/nodes/NumberDisplayNode.html">NumberDisplayNode</a><br>
+	<a href="html/nodes/NumberOperatorNode.html">NumberOperatorNode</a><br>
+	<a href="html/nodes/PowNode.html">PowNode</a><br>
+	<a href="html/nodes/RangeNode.html">RangeNode</a><br>
+	<a href="html/nodes/ReplaceNanNode.html">ReplaceNanNode</a><br>
+	<a href="html/nodes/SineNode.html">SineNode</a><br>
+	<a href="html/nodes/GridScatterNode.html">GridScatterNode</a><br>
+	<a href="html/nodes/StringDisplayNode.html">StringDisplayNode</a><br>
+	<a href="html/nodes/StringNode.html">StringNode</a><br>
+	<a href="html/nodes/SaveTextureNode.html">SaveTextureNode</a><br>
+	<a href="html/nodes/TextureFileNode.html">TextureFileNode</a><br>
+	<a href="html/nodes/TexturePropertiesNode.html">TexturePropertiesNode</a><br>
+	<a href="html/nodes/LabelNode.html">LabelNode</a><br>
+	<a href="html/nodes/RepeatNumberNode.html">RepeatNumberNode</a><br>
+	<a href="html/nodes/OperatorNode.html">OperatorNode</a><br>
+	<a href="html/nodes/RandomOffsetNode.html">RandomOffsetNode</a><br>
+	<a href="html/nodes/SplitNode.html">SplitNode</a><br>
+	<a href="html/nodes/Vector3Node.html">Vector3Node</a><br>
+
+	<h2 id="contact">Contact</h2>
+
+	<p>
+		GDI is developed by <a href="http://www.nuke-the-moon.com">Nuke The Moon</a>.
+	</p>
+
+	<p>
+		<a href="https://twitter.com/NTM_Games">
+			<img src="img/Twitter_Logo_Blue.png">
+		</a>
+
+		<a href="https://www.facebook.com/NukeTheMoonGames/">
+			<img src="img/Facebook_Logo.png">
+		</a>
+
+		<a href="mailto:mail@nuke-the-moon.com">
+			<img src="img/mail.png">
+		</a>
+	</p>
+</body>
+</html>
+
+

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>CircleNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+	<h1>CircleNode</h1>
+	<p>
+		The <b>CircleNode</b> creates height map values with the shape of a circle.
+		Can be used to mask or mix areas of your height map.
+	</p>
+
+	<h3 class="input">Input:</h3>
+	<table>
+		<tr>
+			<td>
+				<b>radius</b>
+			</td>
+			<td>
+				The radius of the circle.
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b>gradient with</b>
+			</td>
+			<td>
+				The width of a gradient. The gradient increases the radius of the circle. 0 for no gradient.
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b>gradient exponent</b>
+			</td>
+			<td>
+				The exponent of the gradient.
+			</td>
+		</tr>
+	</table>
+
+
+	<h3 class="input">Output:</h3>
+	<table>
+		<tr>
+			<td>value</td>
+			<td>
+				Height map values with the shape of a circle. float.NaN for values
+				that do not intersect the cycle.
+			</td>
+		</tr>
+		<tr>
+			<td>diameter</td>
+			<td>
+				The diameter of the circle.
+			</td>
+		</tr>
+	</table>
+
+	<img src="../../img/nodes/CycleNode/CycleNodeExample_01.png">
+	</body>
+</html>

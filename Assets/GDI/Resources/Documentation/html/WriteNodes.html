@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>How To Write A Custom Node</title>
+	<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+<h1>How To Write A Custom Node</h1>
+
+<p>Writing a new custom node is very simple. This page contains the topics:</p>
+<ul>
+	<li>
+		<a href="#createtheclass">Create The Class</a>
+	</li>
+	<li>
+		<a href="#implement">Implement The Functionality</a>
+	</li>
+	<li>
+		<a href="#addthenode">Add The Node To The Editor</a>
+	</li>
+	<li>
+		<a href="#requestparameter">Understand The Request Parameter</a>
+	</li>
+	<li>
+		<a href="#serialization">Make The Node Persistent</a>
+	</li>
+	<li>
+		<a href="#threadsafe">Be Thread Safe</a>
+	</li>
+	<li>
+		<a href="#nodetypes">Use Other Node Types</a>
+	</li>
+</ul>
+
+<h2 id="createtheclass">Create The Class</h2>
+<p>
+At first you need to create a new C# script and save it to the nodes directory of GDI.
+Let's name the new class <b>MyNode</b> in this example. This node should get
+a number from its input socket, make a calculation and return it to the
+output socket. <b>MyNode</b> has to inherit from the existing class
+<b>AbstractNumberNode</b> to get the functionality of a node that can return numbers. We need
+to override the abstract methods of the <b>AbstractNumberNode</b> as well. Our node class now looks like this:
+
+<pre><code class="cs cscode"><span class="cscode-keyword">using</span> System;
+<span class="cscode-keyword">using</span> Assets.Code.GDI.Socket;
+
+<span class="cscode-keyword">public</span> <span class="cscode-keyword">class</span> <span class="cscode-title">MyNode</span> : <span class="cscode-title">AbstractNumberNode</span>
+{
+	<span class="cscode-comment">// constructor</span>
+	<span class="hljs-function"><span class="cscode-keyword">public</span> <span class="cscode-title">MyNode</span>(<span class="hljs-params"><span class="cscode-keyword">int</span> id, Graph parent</span>) : <span class="cscode-title">base</span>(<span class="hljs-params">id, parent</span>)
+	</span>{
+	}
+
+	<span class="cscode-comment">// draw method for the nodes GUI</span>
+	<span class="hljs-function"><span class="cscode-keyword">protected</span> <span class="cscode-keyword">override</span> <span class="cscode-keyword">void</span> <span class="cscode-title">OnGUI</span>(<span class="hljs-params"></span>)
+	</span>{
+	}
+
+	<span class="cscode-comment">// update method for the nodes GUI</span>
+	<span class="hljs-function"><span class="cscode-keyword">public</span> <span class="cscode-keyword">override</span> <span class="cscode-keyword">void</span> <span class="cscode-title">Update</span>(<span class="hljs-params"></span>)
+	</span>{
+	}
+
+	<span class="cscode-comment">// calculation method</span>
+	<span class="hljs-function"><span class="cscode-keyword">public</span> <span class="cscode-keyword">override</span> <span class="cscode-keyword">float</span> <span class="cscode-title">GetNumber</span>(<span class="hljs-params">OutputSocket outSocket, Request request</span>)
+	</span>{
+	<span class="cscode-keyword">return</span> <span class="cscode-number">0</span>;
+	}
+}</code></pre>
+
+<p>The constructor gets called if our node is created. Usually you add sockets here
+and initialize the size of the node. The <b>id</b> parameter is the unique id of the node. The <b>parent</b> parameter
+is the graph of the node. Both parameters are passed to the parent class and we do not need to touch them.</p>
+<p><i>Do not use Unity specific objects in the constructor (like Vector3 or Rect) because it is called within the serialization process.
+Unity would otherwise throw error messages.</i></p>
+<p>
+The <b>OnGUI</b> method gets called from the EditorWindow of GDI. You can draw the GUI elements of the node
+and use the functionality of the <a href="https://docs.unity3d.com/ScriptReference/EditorGUI.html">EditorGUI</a> API of Unity.</p>
+<p>
+<blockquote>The positioning of UI elements is relative to the node. You also get mouse position events relative to it.</blockquote>
+
+<p>The <b>Update</b> method gets called if a connected input node has changed. If our node displays something that is
+based on its input we would need to update it here.</p>
+
+<blockquote>The <b>Number Display Node</b> for example updates its number on every update call.</blockquote>
+
+<p>
+The <b>Get Number</b> method is called from a node that is connected to an output socket of <b>MyNode</b>. We will implement
+the calculation logic of the node here and return it. For the moment let's ignore its parameters. We get to that later.</p>
+
+<blockquote>Read more about the threading rules for that method later on this page.</blockquote>
+
+<h2 id="implement">Implement The Functionality</h2>
+<p>
+	In order to get number values from a connected input node we need to create an input socket for it.
+	We also want to return our calculated number to an output node so we create an output socket as well.
+</p>
+<p>
+	Let's add the sockets in the constructor of <b>MyNode</b>, get the input number, add a value to it and return it. Our node class now looks like this:
+</p>
+<pre><code class="cs cscode"><span class="cscode-keyword">using</span> System;
+<span class="cscode-keyword">using</span> Assets.Code.GDI.Socket;
+
+<span class="cscode-keyword">public</span> <span class="cscode-keyword">class</span> <span class="cscode-title">MyNode</span> : <span class="cscode-title">AbstractNumberNode</span>
+{
+	<span class="cscode-keyword">private</span> InputSocket _inputSocket;
+
+	<span class="hljs-function"><span class="cscode-keyword">public</span> <span class="cscode-title">MyNode</span>(<span class="hljs-params"><span class="cscode-keyword">int</span> id, Graph parent</span>) : <span class="cscode-title">base</span>(<span class="hljs-params">id, parent</span>)
+	</span>{
+		_inputSocket = <span class="cscode-keyword">new</span> InputSocket(<span class="cscode-keyword">this</span>, <span class="cscode-keyword">typeof</span>(INumberConnection));
+		OutputSocket outputSocket = <span class="cscode-keyword">new</span> OutputSocket(<span class="cscode-keyword">this</span>, <span class="cscode-keyword">typeof</span>(INumberConnection));
+		Sockets.Add(_inputSocket);
+		Sockets.Add(outputSocket);
+		Width = <span class="cscode-number">100</span>;
+		Height = <span class="cscode-number">100</span>;
+	}
+
+	<span class="hljs-function"><span class="cscode-keyword">protected</span> <span class="cscode-keyword">override</span> <span class="cscode-keyword">void</span> <span class="cscode-title">OnGUI</span>(<span class="hljs-params"></span>)
+	</span>{
+	}
+
+	<span class="hljs-function"><span class="cscode-keyword">public</span> <span class="cscode-keyword">override</span> <span class="cscode-keyword">void</span> <span class="cscode-title">Update</span>(<span class="hljs-params"></span>)
+	</span>{
+	}
+
+	<span class="hljs-function"><span class="cscode-keyword">public</span> <span class="cscode-keyword">override</span> <span class="cscode-keyword">float</span> <span class="cscode-title">GetNumber</span>(<span class="hljs-params">OutputSocket outSocket, Request request</span>)
+	</span>{
+		<span class="cscode-keyword">float</span> inputNumber = GetInputNumber(_inputSocket, request);
+		<span class="cscode-keyword">return</span> inputNumber + <span class="cscode-number">1</span>;
+	}
+}</code></pre>
+<p>
+	In the <b>constructor</b> we create our input and output sockets. The sockets
+	need to have an reference to our node. That's why we assign <b>this</b> as the first parameter. The second
+	parameter defines the type of the socket. Our node should receive
+	and return numbers so we assign the type of <b>INumberConnection</b> as the socket types.
+	We also add our sockets to the list of of sockets.
+</p>
+<p>
+	In the <b>GetNumber</b> method we receive the number of our input using the helper method <b>GetInputNumber</b>.
+	We just need to assign our input socket and pass through the request parameter
+	Finally we add a number to the input value and return it.
+</p>
+<p>
+	In our simple case we can ignore the <b>OutputSocket</b> parameter because <b>MyNode</b> only contains one output.
+	If we have got multiple outputs that return a number we would need to check which of the outputs was requested.
+</p>
+
+<h2 id="addthenode">Add The Node To The Editor</h2>
+<p>Nodes are detected by GDI using the C# reflection api. This makes it very easy to register them to the Editor.
+We just need to add an annotation to the class where we specify the menu entry.</p>
+<p>GDI uses json serialization to save a graph to a file. The <b>Serializable</b> annotation ensures that our node
+can be made persistent.</p>
+
+<pre><code class="cs cscode"><span class="cscode-keyword">using</span> System;
+<span class="cscode-keyword">using</span> Assets.Code.GDI.Socket;
+
+<span class="cscode-keyword">namespace</span> <span class="cscode-title">Assets.Code.GDI.Nodes.Number</span>
+{
+	[Serializable]
+	[GraphContextMenuItem(<span class="cscode-string">"Number"</span>, <span class="cscode-string">"My Node"</span>)]
+	<span class="cscode-keyword">public</span> <span class="cscode-keyword">class</span> <span class="cscode-title">MyNode</span> : <span class="cscode-title">AbstractNumberNode</span>
+	{
+		<span class="cscode-comment">// .. implementation</span>
+	}
+}
+</code></pre>
+<p>The first parameter of <b>GraphContextMenuItem</b> defines the menu entry path of <b>MyNode</b>. This can
+also be an empty string to add our node in the root menu. The second parameter tells the name of the node.</p>
+<p>It is also recommended to put the class in a namespace. The serialization mechanism uses this namespace
+to instantiate the node object.</p>
+<p>At this point we should be able to add our node to a graph using GDI. Simply open up the Editor window, right
+click on the canvas, select the entry <b>Numbers</b> and select the node <b>My Node</b></p>
+
+<h2 id="requestparameter">Understand The Request Parameter</h2>
+<p>In our example we just bypassed the request parameter of the <b>GetNumber</b> method. We needed to pass it to
+the <b>InputSocket</b> because we do not if the connected node uses it.</p>
+<p>The <b>Request</b> contains information about the value that we want to get. For instance it contains coordinate
+values for <b>x</b>, <b>y</b> and <b>z</b>. This enables you to create nodes that return numbers based on a three dimensional position.
+If you write another noise algorithm you can use this coordinates to compute the noise.</p>
+
+<img src="../img/request.png">
+
+<p>Another example for the usage of the request parameter is the <b>Color Gradient Node</b>. It is capable of returning
+color values in one dimension of the gradient. This value is often called <b>t</b> but in our case it uses the <b>y</b>
+coordinate of the request parameter. In Unity the y coordinate is the vertical dimension so it is very comfortable
+to tint height maps with this node.</p>
+
+<p>Request parameters can be used in many ways in your custom node. You can even extend the set of values in the <b>Request</b>
+struct. Keep in mind that your node should be compatible to the way other nodes handle the requests. The node documentation
+tells you more about the usage for every node class.</p>
+
+<h2 id="serialization">Make The Node Persistent</h2>
+<p>All node classes need to have the <b>[Serializable]</b> annotation as seen in the example above.</p>
+<p>If your node contains an option like a checkbox or something you want to make persistent you need mark the corresponding
+class members as <b>[SerializableField]</b>. Notice that you should not serialize UI elements but its states (like a
+boolean field for a checkbox).</p>
+<p>
+Public class members are getting serialized as well. If you do not want that you need to mark it as <b>[NonSerialized]</b>.
+Find more information about the serialization in Unity at the <a href="https://docs.unity3d.com/Manual/JSONSerialization.html">Unity Manual</a>.
+</p>
+<pre><code class="cs cscode">[SerializeField] <span class="cscode-keyword">private</span> <span class="cscode-keyword">bool</span> _optionChecked;
+[NonSerialized] <span class="cscode-keyword">public</span> <span class="cscode-keyword">int</span> AnInteger;
+</code></pre>
+<p>
+
+<h2 id="threadsafe">Be Thread Safe</h2>
+<p>The <b>GetNumber</b> method of our node can be called from different threads simultaneously. Make sure that you
+do not write to class members in this method. Of cause it is allowed to request <b>InputSocket</b> values or read other
+states of the node (like a boolean field that is set by a checkbox).</p>
+<p>It can be very tempting to write data to the node in this request methods because it may lead to better performance
+or something. But this does not work for multi threaded node requests like GDI offers.</p>
+
+<h2 id="nodetypes">Use Other Node Types</h2>
+<p>For now we have only discussed a node type that can return numbers like those that inherit from <b>AbstractNumberNode</b>.
+You can also inherit from other classes to return e.g. colors using <b>AbstractColorNode</b> or a list of <b>Vector3</b>
+using <b>AbstractVector3Node</b>.</p>
+<p>The only difference of the abstract node classes is their request method. For instance a <b>AbstractColorNode</b> must
+override the method:
+<pre><code class="cscode cs"><span class="cscode-keyword">public</span> <span class="cscode-keyword">abstract</span> UnityEngine.<span class="hljs-function">Color <span class="cscode-title">GetColor</span>(<span class="hljs-params">OutputSocket socket, Request request</span>)</span>;</code></pre>
+<p>Request methods have to follow the rules to be thread safe as described before.</p>
+
+<p>In order to return color values we usually want to add an <b>OutputSocket</b> of the type <b>IColorConnection</b>.</p>
+<pre><code class="cs cscode">Sockets.Add(<span class="cscode-keyword">new</span> OutputSocket(<span class="cscode-keyword">this</span>, <span class="cscode-keyword">typeof</span>(IColorConnection)));</code></pre>
+<p>We can also create nodes that return more than one type of value. If you like to create a node that returns a number, a
+color and a list of vectors your class needs to implement the interfaces that are defining the signature of the request methods.</p>
+By inheriting from those interfaces we have made a contract with GDI that we are capable of returning such values.
+<pre><code class="cs cscode"><span class="cscode-keyword">public</span> <span class="cscode-keyword">class</span> <span class="cscode-title">MyNode</span> : <span class="cscode-title">AbstractNumberNode</span>, <span class="cscode-title">IColorSampler</span>, <span class="cscode-title">IVectorSampler</span>
+{
+	<span class="cscode-comment">// contract to act as a number sampler</span>
+	<span class="cscode-comment">// (from AbstractNumberNode that inherits INumberConnection)</span>
+	<span class="hljs-function"><span class="cscode-keyword">public</span> <span class="cscode-keyword">override</span> <span class="cscode-keyword">float</span> <span class="cscode-title">GetNumber</span>(<span class="hljs-params">OutputSocket outSocket, Request request</span>)
+	</span>{ <span class="cscode-comment">// implementation..</span>
+	}
+
+	<span class="cscode-comment">// contract to act as a color sampler</span>
+	<span class="cscode-comment">// (from IColorSampler)</span>
+	<span class="cscode-keyword">public</span> UnityEngine.<span class="hljs-function">Color <span class="cscode-title">GetColor</span>(<span class="hljs-params">OutputSocket socket, Request request</span>)
+	</span>{ <span class="cscode-comment">// implementation..</span>
+	}
+
+	<span class="cscode-comment">// contract to act as a vector list sampler</span>
+	<span class="cscode-comment">// (from IVectorSampler)</span>
+	<span class="cscode-keyword">public</span> List&lt;UnityEngine.Vector3&gt; GetVector3List(OutputSocket outSocket, Request request)
+	{ <span class="cscode-comment">//implementation..</span>
+	}
+
+	<span class="cscode-comment">// ...</span>
+}
+</code></pre>
+</body>
+</html>

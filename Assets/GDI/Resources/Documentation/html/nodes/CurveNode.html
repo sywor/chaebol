@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>CurveNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+		<h1>CurveNode</h1>
+		<p> The <b>CurveNode</b> can be used to map input numbers to output numbers using a curve.
+			Input values between -1 and 1 are are horizontally aligned and their output values are vertically aligned.
+			Drag and drop the points of the curve to set the shape. Add and remove points using the buttons.
+			The <b>CurveNode</b> is useful to modify the shape of a height map.
+		</p>
+
+		<h3 class="input">Options:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>del</b>
+				</td>
+				<td>
+					Deletes the selected curve point.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>add</b>
+				</td>
+				<td>
+					Adds a new point at [0,0] (if this point is not already taken)
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>+</b>
+				</td>
+				<td>
+					Increase the size of the node.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>-</b>
+				</td>
+				<td>
+					Decrease the size of the node.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>clamp</b>
+				</td>
+				<td>
+					Clamps the curve to [-1, 1] if checked.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>scale</b>
+				</td>
+				<td>
+					Only visible if your curves input range is lower than [-1, 1].
+					Scales the output range to the input range.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>cut</b>
+				</td>
+				<td>
+					Only visible if your curves input range is lower than [-1, 1].
+					Cuts the output range at the input range.
+				</td>
+			</tr>
+		</table>
+
+		<h3 class="input">Input:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>value</b>
+				</td>
+				<td>
+					A number between -1 and 1.
+				</td>
+			</tr>
+		</table>
+
+
+		<h3 class="input">Output:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>value</b>
+				</td>
+				<td>
+					The curve value at the input value.
+				</td>
+			</tr>
+		</table>
+
+		<h3>Example:</h3>
+		<img src="../../img/nodes/CurveNode/CurveNodeExample_01.png">
+	</body>
+</html>

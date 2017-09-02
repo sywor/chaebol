@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>RandomOffsetNode
+	</title>
+		<link rel="stylesheet" href="../../css/styles.css">
+	</head>
+	<body>
+		<h1>RandomOffsetNode</h1>
+		<p>
+			The <b>RandomOffsetNode</b> scatters positions by an offset and noise factor.
+		</p>
+
+		<h3 class="input">Input:</h3>
+		<table>
+			<tr>
+				<td>
+					<b>vec</b>
+				</td>
+				<td>
+					The positions to offset.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>offset</b>
+				</td>
+				<td>
+					The max offset distance.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>noise</b>
+				</td>
+				<td>
+					The factor of the offset distance. Usually a noise value.
+				</td>
+			</tr>
+		</table>
+
+
+		<h3 class="input">Output:</h3>
+		<table>
+			<tr>
+				<td>
+					The randomly offset positions.
+				</td>
+			</tr>
+		</table>
+
+		<h3>Internal Request:</h3>
+		Uses the positions x and z coordinate to request a noise value as the offset factor.
+	</body>
+</html>
