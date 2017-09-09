@@ -38,6 +38,5 @@ sysinfo.txt
 
 # Rider
 /.idea/
-*.DotSettings
 
 # End of https://www.gitignore.io/api/unity
