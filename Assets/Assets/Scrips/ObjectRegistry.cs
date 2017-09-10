@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Scrips;
 using UnityEngine;
 
 public class ObjectRegistry : ScriptableObject
@@ -24,19 +23,21 @@ public class ObjectRegistry : ScriptableObject
         }
     }
     
-    private readonly Dictionary<Guid, Factory> factoryDictionary = new Dictionary<Guid, Factory>();
+    private readonly Dictionary<Guid, Placeable> factoryDictionary = new Dictionary<Guid, Placeable>();
 
-    public Factory GetFactory(Guid _guid)
+    public Placeable GetPlaceable(Guid _guid)
     {
         return factoryDictionary[_guid];
     }
 
-    public void AddFactory(Guid _guid, Factory _factory)
+    public Guid AddPlaceable(Placeable _placeable)
     {
-        factoryDictionary.Add(_guid, _factory);
+        var guid = Guid.NewGuid();
+        factoryDictionary.Add(guid, _placeable);
+        return guid;
     }
 
-    public bool RemoveFactory(Guid _guid)
+    public bool RemovePlaceable(Guid _guid)
     {
         return factoryDictionary.Remove(_guid);
     }

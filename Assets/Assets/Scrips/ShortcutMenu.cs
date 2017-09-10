@@ -1,15 +1,16 @@
-﻿using UnityEditorInternal;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ShortcutMenu : MonoBehaviour
 {
     public Image[] QuickSlotBtnImages = new Image[20];
     public Image DragTarget;
+    public ObjectPlacer ObjectPlacer;
 
     private int fromBtn = -1;
     private int toBtn = -1;
     private bool dropedOnBtn;
+    private readonly PlaceableStack[] placeableStacks = new PlaceableStack[20];
 
     private void Start()
     {
@@ -20,11 +21,26 @@ public class ShortcutMenu : MonoBehaviour
         {
             image.type = Image.Type.Simple;
         }
+
+        for (var i = 1; i < 20; i++)
+        {
+            placeableStacks[i] = NullPlaceableStack.Instance;
+        }
+
+        placeableStacks[0] = PlaceableStack.Create(ScriptableObject.CreateInstance<AssemblyLineTier1>());
+        placeableStacks[0].AddPlaceable(ScriptableObject.CreateInstance<AssemblyLineTier1>());
+        placeableStacks[0].AddPlaceable(ScriptableObject.CreateInstance<AssemblyLineTier1>());
+        placeableStacks[0].AddPlaceable(ScriptableObject.CreateInstance<AssemblyLineTier1>());
     }
 
     public void ButtonClicked(int _buttonId)
     {
-        Debug.Log("Button " + _buttonId + " pressed!");
+        Placeable placeable;
+        if (placeableStacks[_buttonId].GetPlaceable(out placeable))
+        {
+            ObjectPlacer.PlaceObject(placeable);
+            Debug.Log("Button " + _buttonId + " pressed, placing: " + placeable);
+        }
     }
 
     public void ButtonBeginDrag(int _buttonId)
@@ -34,7 +50,6 @@ public class ShortcutMenu : MonoBehaviour
         DragTarget.sprite = quickSlotBtnImage.sprite;
         quickSlotBtnImage.enabled = false;
         DragTarget.enabled = true;
-        //quickSlotBtnImage.enabled = false;
         
         Debug.Log("Button " + _buttonId + " BeginDrag!");
     }
@@ -43,7 +58,6 @@ public class ShortcutMenu : MonoBehaviour
     {
         var mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         DragTarget.transform.position = mousePosition;
-        Debug.Log("Button draging: " + Utils.ToString(mousePosition));
     }
 
     public void ButtonDrop(int _buttonId)
@@ -59,12 +73,17 @@ public class ShortcutMenu : MonoBehaviour
         {
             QuickSlotBtnImages[toBtn].sprite = DragTarget.sprite;
             QuickSlotBtnImages[toBtn].enabled = true;
-            Debug.Log("Dragged from: " + fromBtn + " droped on: " + toBtn);
+            
+            var tmpPlaceableStack = placeableStacks[toBtn];
+            placeableStacks[toBtn] = placeableStacks[fromBtn];
+            placeableStacks[fromBtn] = tmpPlaceableStack;
+            
+            Debug.Log("Dragged from: " + fromBtn + " droped on: " + toBtn + " placeable: " + placeableStacks[toBtn].PlaceableType);
         }
         else
         {
-            QuickSlotBtnImages[fromBtn].sprite = DragTarget.sprite;
-            QuickSlotBtnImages[fromBtn].enabled = true;
+            placeableStacks[fromBtn] = NullPlaceableStack.Instance;
+            //Todo: Make sure that objects are added back to the inventory
             Debug.Log("Dragged from: " + fromBtn + " droped in space");
         }
 
@@ -72,10 +91,5 @@ public class ShortcutMenu : MonoBehaviour
         toBtn = -1;
         dropedOnBtn = false;
         DragTarget.enabled = false;
-    }
-
-    private void Update()
-    {
-
     }
 }
