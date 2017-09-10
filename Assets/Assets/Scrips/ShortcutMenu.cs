@@ -1,73 +1,81 @@
-﻿using System;
+﻿using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ShortcutMenu : MonoBehaviour
 {
     public Image[] QuickSlotBtnImages = new Image[20];
+    public Image DragTarget;
 
-    private enum DragState : byte
+    private int fromBtn = -1;
+    private int toBtn = -1;
+    private bool dropedOnBtn;
+
+    private void Start()
     {
-        UNKNOWN = 0,
-        POTENTIAL = 1,
-        DRAG = 2,
-        DROP = 4
-    }
-    
-    private class DragProgress
-    {
-        public DragState State { get; set; }
-        public int FromBtn { get; set; }
-        public int ToBtn { get; set; }
+        QuickSlotBtnImages[0].sprite = Resources.Load<Sprite>("assemblyline_icon");
+        QuickSlotBtnImages[0].enabled = true;
 
-        public DragProgress()
+        foreach (var image in QuickSlotBtnImages)
         {
-            Reset();
-        }
-
-        public void Reset()
-        {
-            State = DragState.UNKNOWN;
-            FromBtn = -1;
-            ToBtn = -1;
-        }
-
-        public override string ToString()
-        {
-            return "FromBtn: " + FromBtn + " ToBtn: " + ToBtn + " DragState: " + State;
+            image.type = Image.Type.Simple;
         }
     }
-
-    private readonly DragProgress dragProgress = new DragProgress();
 
     public void ButtonClicked(int _buttonId)
     {
         Debug.Log("Button " + _buttonId + " pressed!");
     }
 
-    public void ButtonPotentialDrag(int _buttonId)
+    public void ButtonBeginDrag(int _buttonId)
     {
-        dragProgress.FromBtn = _buttonId;
-        dragProgress.State =  DragState.POTENTIAL;
+        fromBtn = _buttonId;
+        var quickSlotBtnImage = QuickSlotBtnImages[fromBtn];
+        DragTarget.sprite = quickSlotBtnImage.sprite;
+        quickSlotBtnImage.enabled = false;
+        DragTarget.enabled = true;
+        //quickSlotBtnImage.enabled = false;
+        
+        Debug.Log("Button " + _buttonId + " BeginDrag!");
     }
-    
-    public void ButtonDrag(int _buttonId)
+
+    public void ButtonDraging()
     {
-        dragProgress.State = DragState.DRAG;
+        var mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        DragTarget.transform.position = mousePosition;
+        Debug.Log("Button draging: " + Utils.ToString(mousePosition));
     }
-    
+
     public void ButtonDrop(int _buttonId)
     {
-        dragProgress.ToBtn = _buttonId;
-        dragProgress.State = DragState.DROP;
+        toBtn = _buttonId;
+        dropedOnBtn = true;
+        Debug.Log("Button " + _buttonId + " Drop!");
+    }
+
+    public void ButtonEndDrag()
+    {
+        if (dropedOnBtn)
+        {
+            QuickSlotBtnImages[toBtn].sprite = DragTarget.sprite;
+            QuickSlotBtnImages[toBtn].enabled = true;
+            Debug.Log("Dragged from: " + fromBtn + " droped on: " + toBtn);
+        }
+        else
+        {
+            QuickSlotBtnImages[fromBtn].sprite = DragTarget.sprite;
+            QuickSlotBtnImages[fromBtn].enabled = true;
+            Debug.Log("Dragged from: " + fromBtn + " droped in space");
+        }
+
+        fromBtn = -1;
+        toBtn = -1;
+        dropedOnBtn = false;
+        DragTarget.enabled = false;
     }
 
     private void Update()
     {
-        if (DragState.DROP == dragProgress.State)
-        {
-            Debug.Log("Moved item from: " + dragProgress.FromBtn + " To: " + dragProgress.ToBtn);
-            dragProgress.Reset();
-        }
+
     }
 }
