@@ -9,6 +9,7 @@ public class ObjectPlacer : MonoBehaviour
     public Collider MapCollider;
     
     public delegate void PlaceObjecDownDelegate();
+    public delegate void CancelObjectDownDelegate();
     
     private readonly Dictionary<Vector3, GameObject> placedObjects = new Dictionary<Vector3, GameObject>();
     private GameObject placingObject;
@@ -19,9 +20,7 @@ public class ObjectPlacer : MonoBehaviour
         switch (_placeable.Type)
         {
             case Placeable.PlaceableType.ASSEMBLY_LINE_TIER_1:
-                placingObject = Instantiate(AssemblyLineTire1, transform);
-                placingObject.SetActive(false);
-                placingObject.GetComponent<PlaceDownTrigger>().SetTrigger(PlaceObjectDown);
+                SetPlaceObject();
                 break;
             case Placeable.PlaceableType.ASSEMBLY_LINE_TIER_2:
                 break;
@@ -74,7 +73,20 @@ public class ObjectPlacer : MonoBehaviour
             }
             
             placedObjects.Add(placePos, placingObject);
-            placingObject = null;
+            SetPlaceObject();
         }
+    }
+
+    private void CancelObjectDown()
+    {
+        Debug.Log("Cancel placedown");
+        Destroy(placingObject);
+    }
+    
+    private void SetPlaceObject()
+    {
+        placingObject = Instantiate(AssemblyLineTire1, transform);
+        placingObject.SetActive(false);
+        placingObject.GetComponent<PlaceDownTrigger>().SetTriggers(PlaceObjectDown, CancelObjectDown);
     }
 }

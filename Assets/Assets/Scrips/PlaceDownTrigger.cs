@@ -5,14 +5,27 @@ using UnityEngine;
 public class PlaceDownTrigger : MonoBehaviour
 {
     private ObjectPlacer.PlaceObjecDownDelegate placeObjecDownDelegate;
+    private ObjectPlacer.CancelObjectDownDelegate cancelObjectDownDelegate;
     
-    public void SetTrigger(ObjectPlacer.PlaceObjecDownDelegate _delegate)
+    public void SetTriggers(ObjectPlacer.PlaceObjecDownDelegate _place, ObjectPlacer.CancelObjectDownDelegate _cancel)
     {
-        placeObjecDownDelegate = _delegate;
+        placeObjecDownDelegate = _place;
+        cancelObjectDownDelegate = _cancel;
     }
 
-    private void OnMouseDown()
+    private void OnMouseOver()
     {
-        placeObjecDownDelegate();
+        var leftBtn = Input.GetMouseButtonDown(0);
+        var rightBtn = Input.GetMouseButtonDown(1);
+        
+        if (leftBtn)
+        {
+            placeObjecDownDelegate();
+        }
+        
+        if (rightBtn)
+        {
+            cancelObjectDownDelegate();
+        }
     }
 }
