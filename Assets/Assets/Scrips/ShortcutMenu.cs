@@ -35,7 +35,7 @@ public class ShortcutMenu : MonoBehaviour
 
     public void ButtonClicked(int _buttonId)
     {
-        Placeable placeable;
+        IPlaceable placeable;
         if (placeableStacks[_buttonId].GetPlaceable(out placeable))
         {
             ObjectPlacer.PlaceObject(placeable);

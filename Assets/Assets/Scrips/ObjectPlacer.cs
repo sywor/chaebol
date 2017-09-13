@@ -11,10 +11,10 @@ public class ObjectPlacer : MonoBehaviour
     public delegate void PlaceObjecDownDelegate();
     public delegate void CancelObjectDownDelegate();
     
-    private Placeable placingObject;
+    private IPlaceable placingObject;
     private Vector3 placePos;
 
-    public void PlaceObject(Placeable _placeable)
+    public void PlaceObject(IPlaceable _placeable)
     {
         foreach (var placeable in ObjectRegistry.Instance.GetAllPlaceables())
         {
@@ -23,16 +23,16 @@ public class ObjectPlacer : MonoBehaviour
         
         switch (_placeable.Type)
         {
-            case Placeable.PlaceableType.ASSEMBLY_LINE_TIER_1:
+            case PlaceableType.ASSEMBLY_LINE_TIER_1:
                 InstantiateAssemblyLineT1();
                 break;
-            case Placeable.PlaceableType.ASSEMBLY_LINE_TIER_2:
+            case PlaceableType.ASSEMBLY_LINE_TIER_2:
                 break;
-            case Placeable.PlaceableType.ASSEMBLY_LINE_TIER_3:
+            case PlaceableType.ASSEMBLY_LINE_TIER_3:
                 break;
-            case Placeable.PlaceableType.ASSEMBLY_LINE_TIER_4:
+            case PlaceableType.ASSEMBLY_LINE_TIER_4:
                 break;
-            case Placeable.PlaceableType.ASSEMBLY_LINE_TIER_5:
+            case PlaceableType.ASSEMBLY_LINE_TIER_5:
                 break;
             default:
                 placingObject = null;
@@ -87,8 +87,8 @@ public class ObjectPlacer : MonoBehaviour
             placeable.InGameObject.GetComponent<HardPointVisability>().HideHardPoints();
         }
         
-        Destroy(placingObject.InGameObject);
-        Destroy(placingObject);
+        placingObject.Destroy();
+        placingObject = null;
     }
     
     private void InstantiateAssemblyLineT1()
@@ -96,9 +96,9 @@ public class ObjectPlacer : MonoBehaviour
         var newGuid = Guid.NewGuid();
         var inGameObject = Instantiate(AssemblyLineTire1, transform);
         inGameObject.SetActive(false);
-        inGameObject.name = "AT1:" + newGuid;
+        inGameObject.name = "ALT1:" + newGuid;
         inGameObject.GetComponent<PlaceDownTrigger>().SetTriggers(PlaceObjectDown, CancelObjectDown);
 
-        placingObject = AssemblyLineTier1.Create(inGameObject, Vector3.zero, newGuid);
+        placingObject = Placeable<AssemblyLineTier1>.Create(inGameObject, Vector3.zero, newGuid);
     }
 }

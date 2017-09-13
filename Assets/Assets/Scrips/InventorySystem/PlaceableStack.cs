@@ -4,11 +4,11 @@ public class PlaceableStack : ScriptableObject
 {
     private const int DEFAULT_MAX_COUNT = 100;
     
-    public Placeable PlaceableType { get; private set; }
+    public IPlaceable PlaceableType { get; private set; }
     public int MaxCount { get; private set; }
     public int CurrentCount { get; private set; }
 
-    public static PlaceableStack Create(Placeable _placeableType, int _maxCount = DEFAULT_MAX_COUNT, int _currentCount = 0)
+    public static PlaceableStack Create(IPlaceable _placeableType, int _maxCount = DEFAULT_MAX_COUNT, int _currentCount = 0)
     {
         var placeableStack = CreateInstance<PlaceableStack>();
         
@@ -26,11 +26,11 @@ public class PlaceableStack : ScriptableObject
         CurrentCount = 0;
     }
 
-    public bool GetPlaceable(out Placeable _placeable)
+    public bool GetPlaceable(out IPlaceable _placeable)
     {
         if (CurrentCount > 0 && PlaceableType.GetType() != NullPlaceable.Instance.GetType())
         {
-            _placeable = Instantiate(PlaceableType);
+            _placeable = PlaceableType.Instantiate();
             CurrentCount--;
             return true;
         }
@@ -39,7 +39,7 @@ public class PlaceableStack : ScriptableObject
         return false;
     }
 
-    public bool AddPlaceable(Placeable _placeable)
+    public bool AddPlaceable(IPlaceable _placeable)
     {
         if (CurrentCount < MaxCount)
         {

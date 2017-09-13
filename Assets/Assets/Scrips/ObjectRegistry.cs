@@ -24,14 +24,14 @@ public class ObjectRegistry : ScriptableObject
         }
     }
     
-    private readonly Dictionary<Guid, Placeable> factoryDictionary = new Dictionary<Guid, Placeable>();
+    private readonly Dictionary<Guid, IPlaceable> factoryDictionary = new Dictionary<Guid, IPlaceable>();
 
-    public Placeable GetPlaceable(Guid _guid)
+    public IPlaceable GetPlaceable(Guid _guid)
     {
         return factoryDictionary[_guid];
     }
 
-    public Guid AddPlaceable(Placeable _placeable)
+    public Guid AddPlaceable(IPlaceable _placeable)
     {
         var guid = Guid.NewGuid();
         factoryDictionary.Add(guid, _placeable);
@@ -62,7 +62,7 @@ public class ObjectRegistry : ScriptableObject
         return false;
     }
 
-    public IEnumerable<Placeable> GetAllPlaceables()
+    public IEnumerable<IPlaceable> GetAllPlaceables()
     {
         return factoryDictionary.Values;
     }

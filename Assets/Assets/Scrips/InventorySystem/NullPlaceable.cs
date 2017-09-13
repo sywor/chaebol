@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class NullPlaceable : Placeable
+public class NullPlaceable : Placeable<NullPlaceable>
 {
     private static NullPlaceable instance;
     public static NullPlaceable Instance
@@ -15,39 +15,15 @@ public class NullPlaceable : Placeable
 
             if (instance == null)
             {
-                instance = CreateInstance<NullPlaceable>();
-                instance.InGameObject = null;
-                instance.Position = Vector3.zero;
-                instance.ID = Guid.Empty;
+                instance = Create(null, Vector3.zero, Guid.Empty);
             }
 
             return instance;
         }
     }
+
+    public NullPlaceable() : base(PlaceableType.UNKNOWN) {}
     
-    public override PlaceableType Type
-    {
-        get { return PlaceableType.UNKNOWN; }
-    }
-
-    public override Vector3 Position
-    {
-        get; 
-        protected set;
-    }
-
-    public override GameObject InGameObject
-    {
-        get; 
-        protected set;
-    }
-
-    public override Guid ID
-    {
-        get; 
-        protected set;
-    }
-
     public override void Update()
     {
         //Do nothing
