@@ -47,18 +47,21 @@ public class ObjectRegistry : ScriptableObject
     /// Checks agains registerd objects if they collide with given bounds
     /// </summary>
     /// <param name="_expectedBounds">The bounds to check against</param>
+    /// <param name="_collidingObject">If collission is detected this will be the collided object</param>
     /// <returns>True if a collision is found</returns>
-    public bool CheckCollision(Bounds _expectedBounds)
+    public bool CheckCollision(Bounds _expectedBounds, out GameObject _collidingObject)
     {
         foreach (var placedObject in factoryDictionary.Values)
         {
             var componentCollider = placedObject.InGameObject.GetComponent<BoxCollider>();
             if (componentCollider.bounds.Intersects(_expectedBounds))
             {
+                _collidingObject = componentCollider.gameObject;
                 return true;
             }
         }
-        
+
+        _collidingObject = null;
         return false;
     }
 
