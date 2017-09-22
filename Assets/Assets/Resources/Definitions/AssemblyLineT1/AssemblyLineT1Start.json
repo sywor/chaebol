@@ -1,0 +1,31 @@
+{
+  "model" : "AssemblyLineT1Start.obj",
+  "texture" : "AssemblyLineT1Start.png",
+  "snapPoints" :
+  [
+    {
+      "name" : "forward",
+      "position" : "x:y:z",
+      "connectsTo" :
+      [
+        "AssemblyLineT1Start:rear",
+      ]
+    },
+    {
+      "name" : "power",
+      "position" : "x:y:z",
+      "connectsTo" :
+      [
+        "Utility:power"
+      ]
+    },
+    {
+      "name" : "hydrolic",
+      "position" : "x:y:z",
+      "connectsTo" :
+      [
+        "Utility:hydrolic"
+      ]
+    }
+  ]
+}

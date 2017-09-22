@@ -1,0 +1,23 @@
+{
+  "model" : "AssemblyLineT1End.obj",
+  "texture" : "AssemblyLineT1End.png",
+  "snapPoints" :
+  [
+    {
+      "name" : "rear",
+      "position" : "x:y:z",
+      "connectsTo" :
+      [
+        "AssemblyLineT1Middle:forward"
+      ]
+    },
+    {
+      "name" : "output",
+      "position" : "x:y:z",
+      "connectsTo" :
+      [
+        "Belt:input"
+      ]
+    }
+  ]
+}

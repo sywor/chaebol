@@ -1,0 +1,41 @@
+{
+  "model" : "AssemblyLineT1Middle.obj",
+  "texture" : "AssemblyLineT1Middle.png",
+  "snapPoints" :
+  [
+    {
+      "name" : "forward",
+      "position" : "x:y:z",
+      "connectsTo" :
+      [
+        "AssemblyLineT1Middle:rear",
+        "AssemblyLineT1End:rear"
+      ]
+    },
+    {
+      "name" : "rear",
+      "position" : "x:y:z",
+      "connectsTo" :
+      [
+        "AssemblyLineT1Middle:forward",
+        "AssemblyLineT1Start:forward"
+      ]
+    },
+    {
+      "name" : "left",
+      "position" : "x:y:z",
+      "connectsTo" :
+      [
+        "AssemblerT1:line",
+      ]
+    },
+    {
+      "name" : "right",
+      "position" : "x:y:z",
+      "connectsTo" :
+      [
+        "AssemblerT1:line",
+      ]
+    }
+  ]
+}
