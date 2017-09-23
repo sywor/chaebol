@@ -1,0 +1,35 @@
+{
+  "DisplayName" : "Assembly line tier 1 - start",
+  "Model" : "AssemblyLineT1Start.fbx",
+  "Texture" : "AssemblyLineT1StartTexture.png",
+  "SnapPoints" :
+  [
+    {
+      "Name" : "forward",
+      "Position" : [1.0, 1.0, 1.0],
+      "Rotation" : [0.0, 180.0, 0.0],
+      "ConnectsTo" :
+      [
+        "AssemblyLineT1Start:rear",
+      ]
+    },
+    {
+      "Name" : "power",
+      "Position" : [1.0, 1.0, 1.0],
+      "Rotation" : [0.0, 180.0, 0.0],
+      "ConnectsTo" :
+      [
+        "Utility:power"
+      ]
+    },
+    {
+      "Name" : "hydrolic",
+      "Position" : [1.0, 1.0, 1.0],
+      "Rotation" : [0.0, 180.0, 0.0],
+      "ConnectsTo" :
+      [
+        "Utility:hydrolic"
+      ]
+    }
+  ]
+}

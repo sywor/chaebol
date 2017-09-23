@@ -27,10 +27,10 @@ public class ShortcutMenu : MonoBehaviour
             placeableStacks[i] = NullPlaceableStack.Instance;
         }
 
-        placeableStacks[0] = PlaceableStack.Create(ScriptableObject.CreateInstance<AssemblyLineTier1>());
-        placeableStacks[0].AddPlaceable(ScriptableObject.CreateInstance<AssemblyLineTier1>());
-        placeableStacks[0].AddPlaceable(ScriptableObject.CreateInstance<AssemblyLineTier1>());
-        placeableStacks[0].AddPlaceable(ScriptableObject.CreateInstance<AssemblyLineTier1>());
+        placeableStacks[0] = PlaceableStack.Create(ScriptableObject.CreateInstance<ScriptedPlacable>());
+        placeableStacks[0].AddPlaceable(ScriptableObject.CreateInstance<ScriptedPlacable>());
+        placeableStacks[0].AddPlaceable(ScriptableObject.CreateInstance<ScriptedPlacable>());
+        placeableStacks[0].AddPlaceable(ScriptableObject.CreateInstance<ScriptedPlacable>());
     }
 
     public void ButtonClicked(int _buttonId)
@@ -50,7 +50,7 @@ public class ShortcutMenu : MonoBehaviour
         DragTarget.sprite = quickSlotBtnImage.sprite;
         quickSlotBtnImage.enabled = false;
         DragTarget.enabled = true;
-        
+
         Debug.Log("Button " + _buttonId + " BeginDrag!");
     }
 
@@ -73,11 +73,11 @@ public class ShortcutMenu : MonoBehaviour
         {
             QuickSlotBtnImages[toBtn].sprite = DragTarget.sprite;
             QuickSlotBtnImages[toBtn].enabled = true;
-            
+
             var tmpPlaceableStack = placeableStacks[toBtn];
             placeableStacks[toBtn] = placeableStacks[fromBtn];
             placeableStacks[fromBtn] = tmpPlaceableStack;
-            
+
             Debug.Log("Dragged from: " + fromBtn + " droped on: " + toBtn + " placeable: " + placeableStacks[toBtn].PlaceableType);
         }
         else

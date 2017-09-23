@@ -14,21 +14,20 @@ public enum PlaceableType
 
 public abstract class Placeable<T> : ScriptableObject, IPlaceable where T : Placeable<T>
 {
-    private PlaceableType type;
-    private Vector3 position;
+//    private PlaceableType type;
+//    private Vector3 position;
     private GameObject inGameObject;
     private Guid id;
 
-    public PlaceableType Type
-    {
-        get { return type; }
-        private set { type = value; }
-    }
+//    public PlaceableType Type
+//    {
+//        get { return type; }
+//        private set { type = value; }
+//    }
 
     public Vector3 Position
     {
-        get { return position; }
-        private set { position = value; }
+        get { return InGameObject.transform.position; }
     }
 
     public GameObject InGameObject
@@ -39,23 +38,32 @@ public abstract class Placeable<T> : ScriptableObject, IPlaceable where T : Plac
 
     public Guid ID
     {
-        get { return id; } 
+        get { return id; }
         private set { id = value; }
     }
 
-    public Placeable(PlaceableType _placeableType)
-    {
-        type = _placeableType;
-    }
-    
-    public static T Create(GameObject _inGameObject, Vector3 _position, Guid _id)
+//    public Placeable(PlaceableType _placeableType)
+//    {
+//        type = _placeableType;
+//    }
+
+    public static T Create(GameObject _inGameObject, Guid _id)
     {
         var t = CreateInstance<T>();
-        
+
         t.InGameObject = _inGameObject;
-        t.Position = _position;
         t.ID = _id;
-        
+
+        return t;
+    }
+
+    public static T Create(GameObject _inGameObject)
+    {
+        var t = CreateInstance<T>();
+
+        t.InGameObject = _inGameObject;
+        t.ID = Guid.Empty;
+
         return t;
     }
 
@@ -75,7 +83,7 @@ public abstract class Placeable<T> : ScriptableObject, IPlaceable where T : Plac
 
 public interface IPlaceable
 {
-    PlaceableType Type { get; }
+//    PlaceableType Type { get; }
     Vector3 Position { get; }
     GameObject InGameObject{ get; }
     Guid ID { get; }

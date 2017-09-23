@@ -15,15 +15,13 @@ public class NullPlaceable : Placeable<NullPlaceable>
 
             if (instance == null)
             {
-                instance = Create(null, Vector3.zero, Guid.Empty);
+                instance = Create(null, Guid.Empty);
             }
 
             return instance;
         }
     }
 
-    public NullPlaceable() : base(PlaceableType.UNKNOWN) {}
-    
     public override void Update()
     {
         //Do nothing

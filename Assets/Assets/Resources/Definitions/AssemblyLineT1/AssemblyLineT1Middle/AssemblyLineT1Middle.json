@@ -1,0 +1,46 @@
+{
+  "DisplayName" : "Assembly line tier 1 - middle",
+  "Model" : "AssemblyLineT1Middle.fbx",
+  "Texture" : "AssemblyLineT1MiddleTexture.png",
+  "SnapPoints" :
+  [
+    {
+      "Name" : "forward",
+      "Position" : [1.0, 1.0, 1.0],
+      "Rotation" : [0.0, 180.0, 0.0],
+      "ConnectsTo" :
+      [
+        "AssemblyLineT1Middle:rear",
+        "AssemblyLineT1End:rear"
+      ]
+    },
+    {
+      "Name" : "rear",
+      "Position" : [1.0, 1.0, 1.0],
+      "Rotation" : [0.0, 180.0, 0.0],
+      "ConnectsTo" :
+      [
+        "AssemblyLineT1Middle:forward",
+        "AssemblyLineT1Start:forward"
+      ]
+    },
+    {
+      "Name" : "left",
+      "Position" : [1.0, 1.0, 1.0],
+      "Rotation" : [0.0, 180.0, 0.0],
+      "ConnectsTo" :
+      [
+        "AssemblerT1:line",
+      ]
+    },
+    {
+      "Name" : "right",
+      "Position" : [1.0, 1.0, 1.0],
+      "Rotation" : [0.0, 180.0, 0.0],
+      "ConnectsTo" :
+      [
+        "AssemblerT1:line",
+      ]
+    }
+  ]
+}

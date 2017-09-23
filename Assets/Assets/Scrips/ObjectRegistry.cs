@@ -23,24 +23,24 @@ public class ObjectRegistry : ScriptableObject
             return instance;
         }
     }
-    
-    private readonly Dictionary<Guid, IPlaceable> factoryDictionary = new Dictionary<Guid, IPlaceable>();
+
+    private readonly Dictionary<Guid, IPlaceable> placableDictionary = new Dictionary<Guid, IPlaceable>();
 
     public IPlaceable GetPlaceable(Guid _guid)
     {
-        return factoryDictionary[_guid];
+        return placableDictionary[_guid];
     }
 
     public Guid AddPlaceable(IPlaceable _placeable)
     {
         var guid = Guid.NewGuid();
-        factoryDictionary.Add(guid, _placeable);
+        placableDictionary.Add(guid, _placeable);
         return guid;
     }
 
     public bool RemovePlaceable(Guid _guid)
     {
-        return factoryDictionary.Remove(_guid);
+        return placableDictionary.Remove(_guid);
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public class ObjectRegistry : ScriptableObject
     /// <returns>True if a collision is found</returns>
     public bool CheckCollision(Bounds _expectedBounds, out GameObject _collidingObject)
     {
-        foreach (var placedObject in factoryDictionary.Values)
+        foreach (var placedObject in placableDictionary.Values)
         {
             var componentCollider = placedObject.InGameObject.GetComponent<BoxCollider>();
             if (componentCollider.bounds.Intersects(_expectedBounds))
@@ -67,6 +67,6 @@ public class ObjectRegistry : ScriptableObject
 
     public IEnumerable<IPlaceable> GetAllPlaceables()
     {
-        return factoryDictionary.Values;
+        return placableDictionary.Values;
     }
 }

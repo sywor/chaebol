@@ -11,7 +11,7 @@ public class CameraMovment : MonoBehaviour
 	public float RotateYawSpeed = 2.0f;
 	public float RotatePitchSpeed = 2.0f;
 	public float ScrollSpeed = 5.0f;
-	
+
 	private Vector3 desiredPos;
 	private Vector3 smoothSpeed = Vector3.zero;
 
@@ -48,31 +48,31 @@ public class CameraMovment : MonoBehaviour
 		{
 			desiredPos += Speed * transform.right;
 		}
-		
+
 		var tmp = desiredPos + transform.forward * Input.GetAxis("Mouse ScrollWheel") * ScrollSpeed;
 
-		if (tmp.y < PosYMax && tmp.y >= PosYMin && 
+		if (tmp.y < PosYMax && tmp.y >= PosYMin &&
 		    tmp.x < PosXZMax && tmp.x >= PosXZMin &&
 		    tmp.z < PosXZMax && tmp.z >= PosXZMin)
 		{
 			desiredPos = tmp;
 		}
-		
+
 		desiredPos.x = Mathf.Clamp(desiredPos.x, PosXZMin, PosXZMax);
 		desiredPos.y = Mathf.Clamp(desiredPos.y, PosYMin, PosYMax);
 		desiredPos.z = Mathf.Clamp(desiredPos.z, PosXZMin, PosXZMax);
-		
+
 		transform.position = Vector3.SmoothDamp(transform.position, desiredPos, ref smoothSpeed, 0.3f);
 	}
-	
+
 	private void RotateCamera()
 	{
 		if (!Input.GetMouseButton(1)) return;
-		
+
 		yaw += RotateYawSpeed * Input.GetAxis("Mouse X");
 		pitch -= RotatePitchSpeed * Input.GetAxis("Mouse Y");
-		var clampX = Mathf.Clamp(pitch, 0, 90);
+		pitch = Mathf.Clamp(pitch, 0, 90);
 
-		transform.eulerAngles = new Vector3(clampX, yaw, 0.0f);
+		transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
 	}
 }

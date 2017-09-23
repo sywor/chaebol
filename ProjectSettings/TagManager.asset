@@ -4,8 +4,6 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - World
-  - QuickSlotMenu
   - Snapable
   layers:
   - Default
@@ -43,7 +41,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Icon
-    uniqueID: 679016709
     locked: 0

@@ -16,38 +16,38 @@ public class ObjectPlacer : MonoBehaviour
 {
     public GameObject AssemblyLineTire1;
     public Collider MapCollider;
-    
+
     public delegate void PlaceObjecDownDelegate();
     public delegate void CancelObjectDownDelegate();
-    
+
     private IPlaceable placingObject;
     private Vector3 placePos;
-    private HashSet<GameObject> collidedObjects = new HashSet<GameObject>();
+    private readonly HashSet<GameObject> collidedObjects = new HashSet<GameObject>();
 
     public void PlaceObject(IPlaceable _placeable)
     {
-        foreach (var placeable in ObjectRegistry.Instance.GetAllPlaceables())
-        {
-            placeable.InGameObject.GetComponent<HardPointVisability>().ShowHardPoints();
-        }
-        
-        switch (_placeable.Type)
-        {
-            case PlaceableType.ASSEMBLY_LINE_TIER_1:
-                InstantiateAssemblyLineT1();
-                break;
-            case PlaceableType.ASSEMBLY_LINE_TIER_2:
-                break;
-            case PlaceableType.ASSEMBLY_LINE_TIER_3:
-                break;
-            case PlaceableType.ASSEMBLY_LINE_TIER_4:
-                break;
-            case PlaceableType.ASSEMBLY_LINE_TIER_5:
-                break;
-            default:
-                placingObject = null;
-                break;
-        }
+//        foreach (var placeable in ObjectRegistry.Instance.GetAllPlaceables())
+//        {
+//            placeable.InGameObject.GetComponent<HardPointVisability>().ShowHardPoints();
+//        }
+//
+//        switch (_placeable.Type)
+//        {
+//            case PlaceableType.ASSEMBLY_LINE_TIER_1:
+//                InstantiateAssemblyLineT1();
+//                break;
+//            case PlaceableType.ASSEMBLY_LINE_TIER_2:
+//                break;
+//            case PlaceableType.ASSEMBLY_LINE_TIER_3:
+//                break;
+//            case PlaceableType.ASSEMBLY_LINE_TIER_4:
+//                break;
+//            case PlaceableType.ASSEMBLY_LINE_TIER_5:
+//                break;
+//            default:
+//                placingObject = null;
+//                break;
+//        }
     }
 
     private void Update()
@@ -56,18 +56,18 @@ public class ObjectPlacer : MonoBehaviour
         {
             return;
         }
-        
+
         if (placingObject == null) return;
-        
+
         var inGameObject = placingObject.InGameObject;
-        
+
         inGameObject.SetActive(true);
-        
+
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         if (!MapCollider.Raycast(ray, out hit, Mathf.Infinity)) return;
-        
+
         var placingObjectTransform = inGameObject.transform;
 
         var yOffset = placingObjectTransform.localScale.y / 2;
@@ -81,7 +81,7 @@ public class ObjectPlacer : MonoBehaviour
 
             var xOffset = placingObjectTransform.localScale.x / 2 + collidedObject.transform.localScale.x / 2;
             var zOffset = placingObjectTransform.localScale.z / 2 + collidedObject.transform.localScale.z / 2;
-            
+
             switch (collidedSide)
             {
                 case Side.RIGHT:
@@ -115,19 +115,19 @@ public class ObjectPlacer : MonoBehaviour
                 collidedObjects.Clear();
             }
         }
-        
+
         if(!collidedObjects.Any())
         {
             placePos = hit.point + new Vector3(0.0f, yOffset, 0.0f);
         }
-        
+
         placingObjectTransform.position = placePos;
     }
 
     private Side GetCollidedSide(Vector3 _colliededTransformPos, Vector3 _placingTransformPos)
-    {            
+    {
         var posDiff = _colliededTransformPos - _placingTransformPos;
-        
+
         if (Mathf.Abs(posDiff.x) < Mathf.Abs(posDiff.z))
         {
             return posDiff.z > 0 ? Side.FORWARD : Side.REAR;
@@ -153,7 +153,7 @@ public class ObjectPlacer : MonoBehaviour
             {
                 var collidedSide = GetCollidedSide(collidedObject.transform.position, placingObject.InGameObject.transform.position);
                 placingObject.InGameObject.GetComponent<HardPointVisability>().HideSelectedHardPoint(collidedSide);
-                
+
                 switch (collidedSide)
                 {
                     case Side.RIGHT:
@@ -170,7 +170,7 @@ public class ObjectPlacer : MonoBehaviour
                         break;
                 }
             }
-            
+
             collidedObjects.Clear();
             ObjectRegistry.Instance.AddPlaceable(placingObject);
             InstantiateAssemblyLineT1();
@@ -183,11 +183,11 @@ public class ObjectPlacer : MonoBehaviour
         {
             placeable.InGameObject.GetComponent<HardPointVisability>().HideHardPoints();
         }
-        
+
         placingObject.Destroy();
         placingObject = null;
     }
-    
+
     private void InstantiateAssemblyLineT1()
     {
         var newGuid = Guid.NewGuid();
@@ -196,6 +196,6 @@ public class ObjectPlacer : MonoBehaviour
         inGameObject.name = "ALT1:" + newGuid;
         inGameObject.GetComponent<PlaceDownTrigger>().SetTriggers(PlaceObjectDown, CancelObjectDown);
 
-        placingObject = Placeable<AssemblyLineTier1>.Create(inGameObject, Vector3.zero, newGuid);
+        placingObject = Placeable<ScriptedPlacable>.Create(inGameObject, newGuid);
     }
 }

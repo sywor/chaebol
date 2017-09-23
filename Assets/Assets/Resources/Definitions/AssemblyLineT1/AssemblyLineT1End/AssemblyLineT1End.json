@@ -1,0 +1,26 @@
+{
+  "DisplayName" : "Assembly line tier 1 - end",
+  "Model" : "AssemblyLineT1End.fbx",
+  "Texture" : "AssemblyLineT1EndTexture.png",
+  "SnapPoints" :
+  [
+    {
+      "Name" : "rear",
+      "Position" : [1.0, 1.0, 1.0],
+      "Rotation" : [0.0, 180.0, 0.0],
+      "ConnectsTo" :
+      [
+        "AssemblyLineT1Middle:forward"
+      ]
+    },
+    {
+      "Name" : "output",
+      "Position" : [1.0, 1.0, 1.0],
+      "Rotation" : [0.0, 0.0, 0.0],
+      "ConnectsTo" :
+      [
+        "Belt:input"
+      ]
+    }
+  ]
+}
