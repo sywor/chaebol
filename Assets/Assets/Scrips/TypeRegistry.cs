@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.Networking.NetworkSystem;
 
 [CreateAssetMenu]
 public class TypeRegistry : ScriptableObject
@@ -37,11 +35,12 @@ public class TypeRegistry : ScriptableObject
     }
 
     private static TypeRegistry instance;
+
     public static TypeRegistry Instance
     {
         get
         {
-            if (instance == null)
+            if (instance != null)
             {
                 instance = FindObjectOfType<TypeRegistry>();
             }
@@ -71,8 +70,16 @@ public class TypeRegistry : ScriptableObject
         foreach (var resource in resources)
         {
             var jsonDefinition = File.ReadAllText(resource.Definition.ToString());
-            CreatePlaceable(resource, JsonConvert.DeserializeObject<Definition>(jsonDefinition, new DefinitionConverter(), new SnapPointConverter()));
+            CreatePlaceable(resource,
+                            JsonConvert.DeserializeObject<Definition>(jsonDefinition,
+                                                                      new DefinitionConverter(),
+                                                                      new SnapPointConverter()));
         }
+    }
+
+    public IPlaceable GetPlacableType(string _key)
+    {
+        return lookUpPlaceables[_key];
     }
 
     private static void CrawlDirectory(DirectoryInfo _directoryInfo, List<Resource> _resources)
@@ -112,8 +119,15 @@ public class TypeRegistry : ScriptableObject
         placable.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", texture);
 
         placable.AddComponent<PlaceDownTrigger>();
+        placable.AddComponent<SnapPointController>();
+        var snapPointControler = placable.GetComponent<SnapPointController>();
 
-        lookUpPlaceables.Add(key, ScriptedPlacable.Create(placable));
+        foreach (var snapPointDef in _definition.SnapPoints)
+        {
+            snapPointControler.AddSnapPoint(snapPointDef);
+        }
+
+        lookUpPlaceables.Add(key, ScriptedPlacable.Create(key, placable));
     }
 
     private string TrimPath(FileInfo _fileInfo)

@@ -1,29 +1,10 @@
-﻿
-using System;
+﻿using System;
 using UnityEngine;
-
-public enum PlaceableType
-{
-    ASSEMBLY_LINE_TIER_1,
-    ASSEMBLY_LINE_TIER_2,
-    ASSEMBLY_LINE_TIER_3,
-    ASSEMBLY_LINE_TIER_4,
-    ASSEMBLY_LINE_TIER_5,
-    UNKNOWN
-}
 
 public abstract class Placeable<T> : ScriptableObject, IPlaceable where T : Placeable<T>
 {
-//    private PlaceableType type;
-//    private Vector3 position;
     private GameObject inGameObject;
     private Guid id;
-
-//    public PlaceableType Type
-//    {
-//        get { return type; }
-//        private set { type = value; }
-//    }
 
     public Vector3 Position
     {
@@ -42,28 +23,11 @@ public abstract class Placeable<T> : ScriptableObject, IPlaceable where T : Plac
         private set { id = value; }
     }
 
-//    public Placeable(PlaceableType _placeableType)
-//    {
-//        type = _placeableType;
-//    }
-
-    public static T Create(GameObject _inGameObject, Guid _id)
+    public static T Create(string _name, GameObject _inGameObject)
     {
         var t = CreateInstance<T>();
-
+        t.name = _name;
         t.InGameObject = _inGameObject;
-        t.ID = _id;
-
-        return t;
-    }
-
-    public static T Create(GameObject _inGameObject)
-    {
-        var t = CreateInstance<T>();
-
-        t.InGameObject = _inGameObject;
-        t.ID = Guid.Empty;
-
         return t;
     }
 
@@ -73,9 +37,17 @@ public abstract class Placeable<T> : ScriptableObject, IPlaceable where T : Plac
         Destroy(this);
     }
 
-    public IPlaceable Instantiate()
+    public IPlaceable Copy(Transform _transform,
+                           ObjectPlacer.PlaceObjecDownDelegate _placeObjectDown,
+                           ObjectPlacer.CancelObjectDownDelegate _cancelObjectDown)
     {
-        return Instantiate(this);
+        var guid = Guid.NewGuid();
+        var gameObject = Instantiate(InGameObject, _transform);
+        gameObject.SetActive(false);
+        gameObject.name = name + " : " + guid;
+        gameObject.GetComponent<PlaceDownTrigger>().SetTriggers(_placeObjectDown, _cancelObjectDown);
+
+        return Create(name, gameObject);
     }
 
     public abstract void Update();
@@ -83,10 +55,12 @@ public abstract class Placeable<T> : ScriptableObject, IPlaceable where T : Plac
 
 public interface IPlaceable
 {
-//    PlaceableType Type { get; }
     Vector3 Position { get; }
-    GameObject InGameObject{ get; }
+    GameObject InGameObject { get; }
     Guid ID { get; }
     void Destroy();
-    IPlaceable Instantiate();
+
+    IPlaceable Copy(Transform _transform,
+                    ObjectPlacer.PlaceObjecDownDelegate _placeObjectDown,
+                    ObjectPlacer.CancelObjectDownDelegate _cancelObjectDown);
 }

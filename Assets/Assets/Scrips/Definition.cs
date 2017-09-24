@@ -12,14 +12,18 @@ public class DefinitionConverter : JsonConverter
         throw new NotImplementedException();
     }
 
-    public override object ReadJson(JsonReader _reader, Type _objectType, object _existingValue, JsonSerializer _serializer)
+    public override object ReadJson(JsonReader _reader,
+                                    Type _objectType,
+                                    object _existingValue,
+                                    JsonSerializer _serializer)
     {
         var jsonObject = JObject.Load(_reader);
         var displayName = jsonObject["DisplayName"].Value<string>();
         var model = jsonObject["Model"].Value<string>();
         var texture = jsonObject["Texture"].Value<string>();
 
-        var snapPoints = jsonObject["SnapPoints"].Select(_jSnapPoint => _serializer.Deserialize<SnapPoint>(_jSnapPoint.CreateReader())).ToList();
+        var snapPoints = jsonObject["SnapPoints"]
+            .Select(_jSnapPoint => _serializer.Deserialize<SnapPoint>(_jSnapPoint.CreateReader())).ToList();
 
         return new Definition(displayName, model, texture, snapPoints);
     }
@@ -42,16 +46,18 @@ public class SnapPointConverter : JsonConverter
         throw new NotImplementedException();
     }
 
-    public override object ReadJson(JsonReader _reader, Type _objectType, object _existingValue, JsonSerializer _serializer)
+    public override object ReadJson(JsonReader _reader,
+                                    Type _objectType,
+                                    object _existingValue,
+                                    JsonSerializer _serializer)
     {
         var jsonObject = JObject.Load(_reader);
         var name = jsonObject["Name"].Value<string>();
         var positionArr = jsonObject["Position"].Values<float>().ToArray();
-        var rotationArr = jsonObject["Rotation"].Values<float>().ToArray();
+        var rotation = jsonObject["Rotation"].Value<float>();
         var connectsTo = jsonObject["ConnectsTo"].Values<string>().ToList();
 
-        var position = new Vector3(positionArr[0], positionArr[1], positionArr[2]);
-        var rotation = new Vector3(rotationArr[0], rotationArr[1], rotationArr[2]);
+        var position = new Vector2(positionArr[0], positionArr[1]);
 
         return new SnapPoint(name, position, rotation, connectsTo);
     }
@@ -84,18 +90,18 @@ public class Definition
 
     public override string ToString()
     {
-        return "Model: " + Model + " Texture: " + Texture + " SnapPoints: " + SnapPoints.PrettyPrint();
+        return string.Format("DisplayName: {0}, Model: {1}, Texture: {2}, SnapPoints: {3}", DisplayName, Model, Texture, SnapPoints);
     }
 }
 
 public class SnapPoint
 {
     public string Name { get; private set; }
-    public Vector3 Position { get; private set; }
-    public Vector3 Rotation { get; private set; }
+    public Vector2 Position { get; private set; }
+    public float Rotation { get; private set; }
     public List<string> ConnectsTo { get; private set; }
 
-    public SnapPoint(string _name, Vector3 _position, Vector3 _rotation, List<string> _connectsTo)
+    public SnapPoint(string _name, Vector2 _position, float _rotation, List<string> _connectsTo)
     {
         Name = _name;
         Position = _position;
@@ -105,6 +111,34 @@ public class SnapPoint
 
     public override string ToString()
     {
-        return "Name: " + Name + " Position: " + Position.PrettyPrint() + " ConnectsTo: " + ConnectsTo.PrettyPrint();
+        return string.Format("Name: {0}, Position: {1}, Rotation: {2}, ConnectsTo: {3}", Name, Position, Rotation, ConnectsTo);
+    }
+
+    protected bool Equals(SnapPoint _other)
+    {
+        return string.Equals(Name, _other.Name) && Position.Equals(_other.Position) && Rotation.Equals(_other.Rotation) && Equals(ConnectsTo, _other.ConnectsTo);
+    }
+
+    public override bool Equals(object _obj)
+    {
+        if (ReferenceEquals(null, _obj))
+            return false;
+        if (ReferenceEquals(this, _obj))
+            return true;
+        if (_obj.GetType() != GetType())
+            return false;
+        return Equals((SnapPoint) _obj);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            var hashCode = Name != null ? Name.GetHashCode() : 0;
+            hashCode = (hashCode * 397) ^ Position.GetHashCode();
+            hashCode = (hashCode * 397) ^ Rotation.GetHashCode();
+            hashCode = (hashCode * 397) ^ (ConnectsTo != null ? ConnectsTo.GetHashCode() : 0);
+            return hashCode;
+        }
     }
 }

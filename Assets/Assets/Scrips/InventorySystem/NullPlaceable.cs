@@ -1,9 +1,7 @@
-﻿using System;
-using UnityEngine;
-
-public class NullPlaceable : Placeable<NullPlaceable>
+﻿public class NullPlaceable : Placeable<NullPlaceable>
 {
     private static NullPlaceable instance;
+
     public static NullPlaceable Instance
     {
         get
@@ -15,7 +13,7 @@ public class NullPlaceable : Placeable<NullPlaceable>
 
             if (instance == null)
             {
-                instance = Create(null, Guid.Empty);
+                instance = Create("NULL", null);
             }
 
             return instance;

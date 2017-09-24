@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -18,6 +17,7 @@ public class ObjectPlacer : MonoBehaviour
     public Collider MapCollider;
 
     public delegate void PlaceObjecDownDelegate();
+
     public delegate void CancelObjectDownDelegate();
 
     private IPlaceable placingObject;
@@ -26,28 +26,14 @@ public class ObjectPlacer : MonoBehaviour
 
     public void PlaceObject(IPlaceable _placeable)
     {
-//        foreach (var placeable in ObjectRegistry.Instance.GetAllPlaceables())
-//        {
-//            placeable.InGameObject.GetComponent<HardPointVisability>().ShowHardPoints();
-//        }
-//
-//        switch (_placeable.Type)
-//        {
-//            case PlaceableType.ASSEMBLY_LINE_TIER_1:
-//                InstantiateAssemblyLineT1();
-//                break;
-//            case PlaceableType.ASSEMBLY_LINE_TIER_2:
-//                break;
-//            case PlaceableType.ASSEMBLY_LINE_TIER_3:
-//                break;
-//            case PlaceableType.ASSEMBLY_LINE_TIER_4:
-//                break;
-//            case PlaceableType.ASSEMBLY_LINE_TIER_5:
-//                break;
-//            default:
-//                placingObject = null;
-//                break;
-//        }
+        foreach (var placeable in ObjectRegistry.Instance.GetAllPlaceables())
+        {
+            placeable.InGameObject.GetComponent<SnapPointController>()
+                     .ShowSnapPoint(_placeable.InGameObject.GetComponent<SnapPointController>());
+        }
+
+        placingObject = _placeable;
+        InstantiatePlacable();
     }
 
     private void Update()
@@ -57,7 +43,8 @@ public class ObjectPlacer : MonoBehaviour
             return;
         }
 
-        if (placingObject == null) return;
+        if (placingObject == null)
+            return;
 
         var inGameObject = placingObject.InGameObject;
 
@@ -66,7 +53,8 @@ public class ObjectPlacer : MonoBehaviour
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (!MapCollider.Raycast(ray, out hit, Mathf.Infinity)) return;
+        if (!MapCollider.Raycast(ray, out hit, Mathf.Infinity))
+            return;
 
         var placingObjectTransform = inGameObject.transform;
 
@@ -116,7 +104,7 @@ public class ObjectPlacer : MonoBehaviour
             }
         }
 
-        if(!collidedObjects.Any())
+        if (!collidedObjects.Any())
         {
             placePos = hit.point + new Vector3(0.0f, yOffset, 0.0f);
         }
@@ -137,7 +125,8 @@ public class ObjectPlacer : MonoBehaviour
 
     public void SnapDetected(GameObject _first, GameObject _second)
     {
-        if(placingObject == null) return;
+        if (placingObject == null)
+            return;
 
         if (placingObject.InGameObject == _first)
         {
@@ -151,29 +140,30 @@ public class ObjectPlacer : MonoBehaviour
         {
             foreach (var collidedObject in collidedObjects)
             {
-                var collidedSide = GetCollidedSide(collidedObject.transform.position, placingObject.InGameObject.transform.position);
-                placingObject.InGameObject.GetComponent<HardPointVisability>().HideSelectedHardPoint(collidedSide);
+                var collidedSide = GetCollidedSide(collidedObject.transform.position,
+                                                   placingObject.InGameObject.transform.position);
+                placingObject.InGameObject.GetComponent<SnapPointController>().HideSelectedHardPoint(collidedSide);
 
                 switch (collidedSide)
                 {
                     case Side.RIGHT:
-                        collidedObject.GetComponent<HardPointVisability>().HideSelectedHardPoint(Side.LEFT);
+                        collidedObject.GetComponent<SnapPointController>().HideSelectedHardPoint(Side.LEFT);
                         break;
                     case Side.LEFT:
-                        collidedObject.GetComponent<HardPointVisability>().HideSelectedHardPoint(Side.RIGHT);
+                        collidedObject.GetComponent<SnapPointController>().HideSelectedHardPoint(Side.RIGHT);
                         break;
                     case Side.FORWARD:
-                        collidedObject.GetComponent<HardPointVisability>().HideSelectedHardPoint(Side.REAR);
+                        collidedObject.GetComponent<SnapPointController>().HideSelectedHardPoint(Side.REAR);
                         break;
                     case Side.REAR:
-                        collidedObject.GetComponent<HardPointVisability>().HideSelectedHardPoint(Side.FORWARD);
+                        collidedObject.GetComponent<SnapPointController>().HideSelectedHardPoint(Side.FORWARD);
                         break;
                 }
             }
 
             collidedObjects.Clear();
             ObjectRegistry.Instance.AddPlaceable(placingObject);
-            InstantiateAssemblyLineT1();
+            InstantiatePlacable();
         }
     }
 
@@ -181,21 +171,15 @@ public class ObjectPlacer : MonoBehaviour
     {
         foreach (var placeable in ObjectRegistry.Instance.GetAllPlaceables())
         {
-            placeable.InGameObject.GetComponent<HardPointVisability>().HideHardPoints();
+            placeable.InGameObject.GetComponent<SnapPointController>().HideSnapPoint();
         }
 
         placingObject.Destroy();
         placingObject = null;
     }
 
-    private void InstantiateAssemblyLineT1()
+    private void InstantiatePlacable()
     {
-        var newGuid = Guid.NewGuid();
-        var inGameObject = Instantiate(AssemblyLineTire1, transform);
-        inGameObject.SetActive(false);
-        inGameObject.name = "ALT1:" + newGuid;
-        inGameObject.GetComponent<PlaceDownTrigger>().SetTriggers(PlaceObjectDown, CancelObjectDown);
-
-        placingObject = Placeable<ScriptedPlacable>.Create(inGameObject, newGuid);
+        placingObject = placingObject.Copy(transform, PlaceObjectDown, CancelObjectDown);
     }
 }

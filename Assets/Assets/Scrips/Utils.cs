@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -32,7 +31,7 @@ public static class Utils
         var sb = new StringBuilder();
         sb.Append("[ ");
 
-        for(var i = 0; i < _list.Count - 1; i++)
+        for (var i = 0; i < _list.Count - 1; i++)
         {
             sb.Append(_list[i]).Append(", ");
         }

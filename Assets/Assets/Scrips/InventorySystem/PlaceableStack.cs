@@ -1,17 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlaceableStack : ScriptableObject
 {
     private const int DEFAULT_MAX_COUNT = 100;
-    
+
     public IPlaceable PlaceableType { get; private set; }
     public int MaxCount { get; private set; }
     public int CurrentCount { get; private set; }
 
-    public static PlaceableStack Create(IPlaceable _placeableType, int _maxCount = DEFAULT_MAX_COUNT, int _currentCount = 0)
+    public static PlaceableStack Create(IPlaceable _placeableType,
+                                        int _maxCount = DEFAULT_MAX_COUNT,
+                                        int _currentCount = 0)
     {
         var placeableStack = CreateInstance<PlaceableStack>();
-        
+
         placeableStack.PlaceableType = _placeableType ?? NullPlaceable.Instance;
         placeableStack.MaxCount = _maxCount;
         placeableStack.CurrentCount = _currentCount;
@@ -21,22 +24,27 @@ public class PlaceableStack : ScriptableObject
 
     public PlaceableStack()
     {
-        PlaceableType =  NullPlaceable.Instance;
+        PlaceableType = NullPlaceable.Instance;
         MaxCount = DEFAULT_MAX_COUNT;
         CurrentCount = 0;
     }
 
-    public bool GetPlaceable(out IPlaceable _placeable)
+    public bool HasPlaceable()
     {
         if (CurrentCount > 0 && PlaceableType.GetType() != NullPlaceable.Instance.GetType())
         {
-            _placeable = PlaceableType.Instantiate();
-            CurrentCount--;
             return true;
         }
-        
-        _placeable = NullPlaceable.Instance;
         return false;
+    }
+
+    public IPlaceable PopPlacable()
+    {
+        if (CurrentCount <= 0)
+            throw new InvalidOperationException("Count can not be negative");
+
+        CurrentCount--;
+        return PlaceableType;
     }
 
     public bool AddPlaceable(IPlaceable _placeable)
@@ -48,7 +56,7 @@ public class PlaceableStack : ScriptableObject
                 CurrentCount++;
                 return true;
             }
-            
+
             if (PlaceableType.GetType() == NullPlaceable.Instance.GetType())
             {
                 PlaceableType = _placeable;

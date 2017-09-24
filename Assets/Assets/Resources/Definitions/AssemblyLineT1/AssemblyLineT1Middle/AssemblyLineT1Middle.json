@@ -6,8 +6,8 @@
   [
     {
       "Name" : "forward",
-      "Position" : [1.0, 1.0, 1.0],
-      "Rotation" : [0.0, 180.0, 0.0],
+      "Position" : [1.0, 1.0],
+      "Rotation" : 180.0,
       "ConnectsTo" :
       [
         "AssemblyLineT1Middle:rear",
@@ -16,8 +16,8 @@
     },
     {
       "Name" : "rear",
-      "Position" : [1.0, 1.0, 1.0],
-      "Rotation" : [0.0, 180.0, 0.0],
+      "Position" : [1.0, 1.0],
+      "Rotation" : 180.0,
       "ConnectsTo" :
       [
         "AssemblyLineT1Middle:forward",
@@ -26,8 +26,8 @@
     },
     {
       "Name" : "left",
-      "Position" : [1.0, 1.0, 1.0],
-      "Rotation" : [0.0, 180.0, 0.0],
+      "Position" : [1.0, 1.0],
+      "Rotation" : 180.0,
       "ConnectsTo" :
       [
         "AssemblerT1:line",
@@ -35,8 +35,8 @@
     },
     {
       "Name" : "right",
-      "Position" : [1.0, 1.0, 1.0],
-      "Rotation" : [0.0, 180.0, 0.0],
+      "Position" : [1.0, 1.0],
+      "Rotation" : 180.0,
       "ConnectsTo" :
       [
         "AssemblerT1:line",

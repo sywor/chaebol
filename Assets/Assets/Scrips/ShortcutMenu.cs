@@ -16,30 +16,39 @@ public class ShortcutMenu : MonoBehaviour
     {
         QuickSlotBtnImages[0].sprite = Resources.Load<Sprite>("assemblyline_icon");
         QuickSlotBtnImages[0].enabled = true;
+        QuickSlotBtnImages[1].sprite = Resources.Load<Sprite>("assemblyline_icon");
+        QuickSlotBtnImages[1].enabled = true;
+        QuickSlotBtnImages[2].sprite = Resources.Load<Sprite>("assemblyline_icon");
+        QuickSlotBtnImages[2].enabled = true;
 
         foreach (var image in QuickSlotBtnImages)
         {
             image.type = Image.Type.Simple;
         }
 
-        for (var i = 1; i < 20; i++)
+        for (var i = 3; i < 20; i++)
         {
             placeableStacks[i] = NullPlaceableStack.Instance;
         }
 
-        placeableStacks[0] = PlaceableStack.Create(ScriptableObject.CreateInstance<ScriptedPlacable>());
-        placeableStacks[0].AddPlaceable(ScriptableObject.CreateInstance<ScriptedPlacable>());
-        placeableStacks[0].AddPlaceable(ScriptableObject.CreateInstance<ScriptedPlacable>());
-        placeableStacks[0].AddPlaceable(ScriptableObject.CreateInstance<ScriptedPlacable>());
+        placeableStacks[0] = PlaceableStack.Create(TypeRegistry.Instance.GetPlacableType("AssemblyLineT1Start"));
+        placeableStacks[0].AddPlaceable(TypeRegistry.Instance.GetPlacableType("AssemblyLineT1Start"));
+
+        placeableStacks[1] = PlaceableStack.Create(TypeRegistry.Instance.GetPlacableType("AssemblyLineT1Middle"));
+        placeableStacks[1].AddPlaceable(TypeRegistry.Instance.GetPlacableType("AssemblyLineT1Middle"));
+        placeableStacks[1].AddPlaceable(TypeRegistry.Instance.GetPlacableType("AssemblyLineT1Middle"));
+
+        placeableStacks[2] = PlaceableStack.Create(TypeRegistry.Instance.GetPlacableType("AssemblyLineT1End"));
+        placeableStacks[2].AddPlaceable(TypeRegistry.Instance.GetPlacableType("AssemblyLineT1End"));
     }
 
     public void ButtonClicked(int _buttonId)
     {
-        IPlaceable placeable;
-        if (placeableStacks[_buttonId].GetPlaceable(out placeable))
+        if (placeableStacks[_buttonId].HasPlaceable())
         {
-            ObjectPlacer.PlaceObject(placeable);
-            Debug.Log("Button " + _buttonId + " pressed, placing: " + placeable);
+            var placeableType = placeableStacks[_buttonId].PopPlacable();
+            ObjectPlacer.PlaceObject(placeableType);
+            Debug.Log("Button " + _buttonId + " pressed, placing: " + placeableType);
         }
     }
 
@@ -78,7 +87,8 @@ public class ShortcutMenu : MonoBehaviour
             placeableStacks[toBtn] = placeableStacks[fromBtn];
             placeableStacks[fromBtn] = tmpPlaceableStack;
 
-            Debug.Log("Dragged from: " + fromBtn + " droped on: " + toBtn + " placeable: " + placeableStacks[toBtn].PlaceableType);
+            Debug.Log("Dragged from: " + fromBtn + " droped on: " + toBtn + " placeable: " +
+                      placeableStacks[toBtn].PlaceableType);
         }
         else
         {

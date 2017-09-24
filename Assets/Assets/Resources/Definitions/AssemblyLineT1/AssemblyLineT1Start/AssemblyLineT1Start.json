@@ -6,17 +6,17 @@
   [
     {
       "Name" : "forward",
-      "Position" : [1.0, 1.0, 1.0],
-      "Rotation" : [0.0, 180.0, 0.0],
+      "Position" : [1.0, 1.0],
+      "Rotation" : 180.0,
       "ConnectsTo" :
       [
-        "AssemblyLineT1Start:rear",
+        "AssemblyLineT1Middle:rear",
       ]
     },
     {
       "Name" : "power",
-      "Position" : [1.0, 1.0, 1.0],
-      "Rotation" : [0.0, 180.0, 0.0],
+      "Position" : [1.0, 1.0],
+      "Rotation" : 180.0,
       "ConnectsTo" :
       [
         "Utility:power"
@@ -24,8 +24,8 @@
     },
     {
       "Name" : "hydrolic",
-      "Position" : [1.0, 1.0, 1.0],
-      "Rotation" : [0.0, 180.0, 0.0],
+      "Position" : [1.0, 1.0],
+      "Rotation" : 180.0,
       "ConnectsTo" :
       [
         "Utility:hydrolic"

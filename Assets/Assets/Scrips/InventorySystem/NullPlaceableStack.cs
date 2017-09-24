@@ -1,7 +1,7 @@
-﻿
-public static class NullPlaceableStack
+﻿public static class NullPlaceableStack
 {
     private static PlaceableStack instance;
+
     public static PlaceableStack Instance
     {
         get
@@ -13,5 +13,5 @@ public static class NullPlaceableStack
 
             return instance;
         }
-    }    
+    }
 }

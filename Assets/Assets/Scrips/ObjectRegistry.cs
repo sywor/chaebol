@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectRegistry : ScriptableObject
 {
     private static ObjectRegistry instance;
+
     public static ObjectRegistry Instance
     {
         get
         {
-            if (instance == null)
+            if (instance != null)
             {
                 instance = FindObjectOfType<ObjectRegistry>();
             }
