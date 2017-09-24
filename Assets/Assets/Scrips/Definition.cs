@@ -5,40 +5,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-public class DefinitionConverter : JsonConverter
-{
-    public override void WriteJson(JsonWriter _writer, object _value, JsonSerializer _serializer)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override object ReadJson(JsonReader _reader,
-                                    Type _objectType,
-                                    object _existingValue,
-                                    JsonSerializer _serializer)
-    {
-        var jsonObject = JObject.Load(_reader);
-        var displayName = jsonObject["DisplayName"].Value<string>();
-        var model = jsonObject["Model"].Value<string>();
-        var texture = jsonObject["Texture"].Value<string>();
-
-        var snapPoints = jsonObject["SnapPoints"]
-            .Select(_jSnapPoint => _serializer.Deserialize<SnapPoint>(_jSnapPoint.CreateReader())).ToList();
-
-        return new Definition(displayName, model, texture, snapPoints);
-    }
-
-    public override bool CanConvert(Type _objectType)
-    {
-        return typeof(Definition) == _objectType;
-    }
-
-    public override bool CanWrite
-    {
-        get { return false; }
-    }
-}
-
 public class SnapPointConverter : JsonConverter
 {
     public override void WriteJson(JsonWriter _writer, object _value, JsonSerializer _serializer)
@@ -80,12 +46,17 @@ public class Definition
     public string Texture { get; private set; }
     public List<SnapPoint> SnapPoints { get; private set; }
 
-    public Definition(string _displayName, string _model, string _texture, List<SnapPoint> _snapPoints)
+    public Definition(string DisplayName, string Model, string Texture, List<SnapPoint> SnapPoints)
     {
-        DisplayName = _displayName;
-        Model = _model;
-        Texture = _texture;
-        SnapPoints = _snapPoints;
+        if (DisplayName == null) throw new ArgumentNullException("DisplayName");
+        if (Model == null) throw new ArgumentNullException("Model");
+        if (Texture == null) throw new ArgumentNullException("Texture");
+        if (SnapPoints == null) throw new ArgumentNullException("SnapPoints");
+        
+        this.DisplayName = DisplayName;
+        this.Model = Model;
+        this.Texture = Texture;
+        this.SnapPoints = SnapPoints;
     }
 
     public override string ToString()
