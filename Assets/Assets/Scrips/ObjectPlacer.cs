@@ -142,21 +142,21 @@ public class ObjectPlacer : MonoBehaviour
             {
                 var collidedSide = GetCollidedSide(collidedObject.transform.position,
                                                    placingObject.InGameObject.transform.position);
-                placingObject.InGameObject.GetComponent<SnapPointController>().HideSelectedHardPoint(collidedSide);
+//                placingObject.InGameObject.GetComponent<SnapPointController>().HideSelectedHardPoint(collidedSide);
 
                 switch (collidedSide)
                 {
                     case Side.RIGHT:
-                        collidedObject.GetComponent<SnapPointController>().HideSelectedHardPoint(Side.LEFT);
+//                        collidedObject.GetComponent<SnapPointController>().HideSelectedHardPoint(Side.LEFT);
                         break;
                     case Side.LEFT:
-                        collidedObject.GetComponent<SnapPointController>().HideSelectedHardPoint(Side.RIGHT);
+//                        collidedObject.GetComponent<SnapPointController>().HideSelectedHardPoint(Side.RIGHT);
                         break;
                     case Side.FORWARD:
-                        collidedObject.GetComponent<SnapPointController>().HideSelectedHardPoint(Side.REAR);
+//                        collidedObject.GetComponent<SnapPointController>().HideSelectedHardPoint(Side.REAR);
                         break;
                     case Side.REAR:
-                        collidedObject.GetComponent<SnapPointController>().HideSelectedHardPoint(Side.FORWARD);
+//                        collidedObject.GetComponent<SnapPointController>().HideSelectedHardPoint(Side.FORWARD);
                         break;
                 }
             }
@@ -171,7 +171,7 @@ public class ObjectPlacer : MonoBehaviour
     {
         foreach (var placeable in ObjectRegistry.Instance.GetAllPlaceables())
         {
-            placeable.InGameObject.GetComponent<SnapPointController>().HideSnapPoint();
+//            placeable.InGameObject.GetComponent<SnapPointController>().HideSnapPoint();
         }
 
         placingObject.Destroy();

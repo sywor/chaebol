@@ -35,7 +35,7 @@ public class SnapPointController : MonoBehaviour
     private List<SnapPoint> GetMatchingSnapPoints(SnapPointController _other)
     {
         var allCombinations =
-            snapPoints.Keys.SelectMany(_s => _other.SnapPoints.Keys.Select(_t => new Tuple<SnapPoint, SnapPoint>(_s, _t)));
+            snapPoints.Keys.SelectMany(_s => _other.SnapPoints.Keys.Select(_t => new {Item1 = _s, Item2 = _t}));
         var connections = allCombinations.Where(_s => _s.Item2.ConnectsTo.Contains(name + ":" + _s.Item1.Name))
                                          .Select(_s => _s.Item1).ToList();
         return connections;
