@@ -3,7 +3,8 @@
 ### Unity ###
 /[Ll]ibrary/
 /[Tt]emp/
-/[Oo]bj/
+[Bb]in/
+[Oo]bj/
 /[Bb]uild/
 /[Bb]uilds/
 /Assets/AssetStoreTools*
@@ -37,7 +38,7 @@ sysinfo.txt
 *.unitypackage
 
 # Rider
-/.idea/
+.idea/
 
 # Blender
 /Blender/
