@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ModApi;
 using ModApi.Attributes;
+using ModApiTest.ModLoaders;
 
 namespace ModApiTest
 {
@@ -11,57 +11,56 @@ namespace ModApiTest
 	{
 		public static void Main(string[] _args)
 		{
-			var assemblyExportedTypes = typeof(Program).Assembly.ExportedTypes;
-			var modTypes = assemblyExportedTypes.Where(_t => _t.GetInterfaces().Contains(typeof(IMod))).ToList();
+			var defaultModLoader = new DefaultModLoader();
+			var id = typeof(DefaultModLoader).GetCustomAttribute<ModLoaderIdAttribute>().Id;
 
-			var modContexts = new List<ModContext>();
-			var loadedModIds = new HashSet<string>();
+			var modLoaderContext = new ModLoaderContext(defaultModLoader, id);
+			defaultModLoader.OnLoad(modLoaderContext);
 
-			foreach (var modType in modTypes)
+			var registeredModIds = new HashSet<string>();
+			var modInfos = new List<ModInfo>();
+			
+			foreach (var modInfo in modLoaderContext.RegisteredModInfos)
 			{
-				var mod = (IMod) Activator.CreateInstance(modType);
+				var modId = modInfo.Id;
 
-				var modIdAttribute = modType.GetCustomAttribute<ModIdAttribute>();
-				var modId = modIdAttribute == null ? Guid.NewGuid().ToString() : modIdAttribute.Id;
-
-				if (loadedModIds.Contains(modId))
+				if (registeredModIds.Contains(modId))
 				{
 					Console.WriteLine($"Duplicate ModId detected: {modId}\n" +
-					                  $"Ignoring {modType}");
+					                  $"Ignoring {modLoaderContext.Id}:{modId}");
 					continue;
 				}
 
-				var dependsOnAttribute = modType.GetCustomAttribute<DependsOnAttribute>();
-				var dependencies = dependsOnAttribute == null ? Enumerable.Empty<string>() : dependsOnAttribute.Dependencies;
-
-				var context = new ModContext(mod, modId, dependencies);
-				modContexts.Add(context);
-				loadedModIds.Add(modId);
+				modInfos.Add(modInfo);
+				registeredModIds.Add(modId);
 			}
 
-			var groupByResolve = modContexts.GroupBy(_m => loadedModIds.IsSupersetOf(_m.Dependencies)).ToList();
-			var unresolvedMods = (groupByResolve.SingleOrDefault(_g => !_g.Key) ?? Enumerable.Empty<ModContext>()).ToList();
+			var groupByResolve = modInfos.ToLookup(_m => registeredModIds.IsSupersetOf(_m.Dependencies));
+			var unresolvedMods = groupByResolve[false].ToList();
 			if (unresolvedMods.Any())
 			{
 				Console.WriteLine("Mods with missing dependencies:");
 				foreach (var unresolved in unresolvedMods)
 				{
 					Console.WriteLine(unresolved);
-					Console.WriteLine("Missing: " + string.Join(", ", unresolved.Dependencies.Except(loadedModIds)));
+					Console.WriteLine("Missing: " + string.Join(", ", unresolved.Dependencies.Except(registeredModIds)));
 				}
 			}
 
-			var modsThatCanBeResolved = groupByResolve.SingleOrDefault(_g => _g.Key) ?? Enumerable.Empty<ModContext>();
-
+			var modsThatCanBeResolved = groupByResolve[true];
 			var modsByDependency = SortModsByDependency(modsThatCanBeResolved).ToList();
 
 			Console.WriteLine("Mods found (" + modsByDependency.Count + "):");
 			modsByDependency.ForEach(_m => Console.WriteLine("  " + _m));
 			Console.WriteLine();
 
-			foreach (var modContext in modsByDependency)
+			foreach (var modInfo in modsByDependency)
 			{
-				Console.WriteLine("Loading mod: " + modContext.ModId);
+				Console.WriteLine("Loading mod: " + modLoaderContext.Id + ":" + modInfo.Id);
+				
+				var instantiatedMod = defaultModLoader.Load(modInfo);
+				var modContext = new ModContext(instantiatedMod, modInfo.Id, modInfo.Dependencies);
+
 				modContext.Load();
 
 				Console.WriteLine("Registered resources:");
@@ -74,21 +73,21 @@ namespace ModApiTest
 
 		private struct ModAndDependencies
 		{
-			public readonly ModContext Mod;
+			public readonly ModInfo Mod;
 			public readonly HashSet<string> UnresolvedDependencies;
 
-			public ModAndDependencies(ModContext _mod, IEnumerable<string> _unresolvedDependencies)
+			public ModAndDependencies(ModInfo _mod, IEnumerable<string> _unresolvedDependencies)
 			{
 				Mod = _mod;
 				UnresolvedDependencies = new HashSet<string>(_unresolvedDependencies);
 			}
 		}
 
-		private static IEnumerable<ModContext> SortModsByDependency(IEnumerable<ModContext> _mods)
+		private static List<ModInfo> SortModsByDependency(IEnumerable<ModInfo> _mods)
 		{
 			var modsWithDependencies = _mods.Select(_m => new ModAndDependencies(_m, _m.Dependencies)).ToList();
 
-			var sortedMods = new List<ModContext>();
+			var sortedMods = new List<ModInfo>();
 
 			while (modsWithDependencies.Any())
 			{
@@ -97,10 +96,10 @@ namespace ModApiTest
 
 				if (withoutUnresolvedDependencies.Any())
 				{
-					withoutUnresolvedDependencies.Sort((_lhs, _rhs) => string.Compare(_lhs.ModId, _rhs.ModId, StringComparison.Ordinal));
+					withoutUnresolvedDependencies.Sort((_lhs, _rhs) => string.Compare(_lhs.Id, _rhs.Id, StringComparison.Ordinal));
 					sortedMods.AddRange(withoutUnresolvedDependencies);
 
-					var resolvedModIds = withoutUnresolvedDependencies.Select(_m => _m.ModId);
+					var resolvedModIds = withoutUnresolvedDependencies.Select(_m => _m.Id);
 					modsWithDependencies = groupByResolved[false]
 						.Select(_m => new ModAndDependencies(_m.Mod, _m.UnresolvedDependencies.Except(resolvedModIds)))
 						.ToList();

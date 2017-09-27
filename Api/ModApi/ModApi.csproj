@@ -42,11 +42,16 @@
   <ItemGroup>
     <Compile Include="Attributes\DependsOnAttribute.cs" />
     <Compile Include="Attributes\ModIdAttribute.cs" />
+    <Compile Include="Attributes\ModLoaderIdAttribute.cs" />
     <Compile Include="IBuilder.cs" />
     <Compile Include="IExtractor.cs" />
     <Compile Include="IExtractorBuilder.cs" />
     <Compile Include="IMod.cs" />
     <Compile Include="IModContext.cs" />
+    <Compile Include="IModInfo.cs" />
+    <Compile Include="IModInfoBuilder.cs" />
+    <Compile Include="IModLoader.cs" />
+    <Compile Include="IModLoaderContext.cs" />
     <Compile Include="IModObject.cs" />
     <Compile Include="IResource.cs" />
     <Compile Include="IResourceBuilder.cs" />

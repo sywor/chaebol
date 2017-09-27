@@ -44,6 +44,10 @@
     <Compile Include="Extractor.cs" />
     <Compile Include="ExtractorBuilder.cs" />
     <Compile Include="ModContext.cs" />
+    <Compile Include="ModInfo.cs" />
+    <Compile Include="ModInfoBuilder.cs" />
+    <Compile Include="ModLoaderContext.cs" />
+    <Compile Include="ModLoaders\DefaultModLoader.cs" />
     <Compile Include="Mods\SomeWeirdMod.cs" />
     <Compile Include="Mods\TestMod.cs" />
     <Compile Include="Mods\TheModEveryoneUses.cs" />
