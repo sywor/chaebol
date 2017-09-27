@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DependencySolver.cs" />
     <Compile Include="Extractor.cs" />
     <Compile Include="ExtractorBuilder.cs" />
     <Compile Include="ModContext.cs" />

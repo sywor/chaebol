@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ModApi.Attributes;
@@ -16,48 +15,47 @@ namespace ModApiTest
 
 			var modLoaderContext = new ModLoaderContext(defaultModLoader, id);
 			defaultModLoader.OnLoad(modLoaderContext);
+			var registeredModInfos = modLoaderContext.RegisteredModInfos;
 
-			var registeredModIds = new HashSet<string>();
-			var modInfos = new List<ModInfo>();
-			
-			foreach (var modInfo in modLoaderContext.RegisteredModInfos)
+			var result = DependencySolver.Solve(registeredModInfos);
+
+			foreach (var duplicate in result.SkippedDuplicates)
 			{
-				var modId = modInfo.Id;
-
-				if (registeredModIds.Contains(modId))
-				{
-					Console.WriteLine($"Duplicate ModId detected: {modId}\n" +
-					                  $"Ignoring {modLoaderContext.Id}:{modId}");
-					continue;
-				}
-
-				modInfos.Add(modInfo);
-				registeredModIds.Add(modId);
+				Console.WriteLine($"Duplicate ModId detected: {duplicate.Id}\n" +
+				                  $"Ignoring {modLoaderContext.Id}:{duplicate.Id}");
 			}
 
-			var groupByResolve = modInfos.ToLookup(_m => registeredModIds.IsSupersetOf(_m.Dependencies));
-			var unresolvedMods = groupByResolve[false].ToList();
-			if (unresolvedMods.Any())
+			if (result.WithMissingDependencies.Any())
 			{
+				var registeredModIds = registeredModInfos.Select(_m => _m.Id).ToList();
+
 				Console.WriteLine("Mods with missing dependencies:");
-				foreach (var unresolved in unresolvedMods)
+				foreach (var unresolved in result.WithMissingDependencies)
 				{
 					Console.WriteLine(unresolved);
 					Console.WriteLine("Missing: " + string.Join(", ", unresolved.Dependencies.Except(registeredModIds)));
 				}
 			}
 
-			var modsThatCanBeResolved = groupByResolve[true];
-			var modsByDependency = SortModsByDependency(modsThatCanBeResolved).ToList();
+			if (result.WithCycles.Any())
+			{
+				Console.WriteLine("Mods with dependency cycles detected:");
+				result.WithCycles.ForEach(_m =>
+				{
+					Console.WriteLine(_m.Mod);
+					Console.WriteLine("Unresolved: " + string.Join(", ", _m.UnresolvedDependencies));
+				});
+				Console.WriteLine();
+			}
 
-			Console.WriteLine("Mods found (" + modsByDependency.Count + "):");
-			modsByDependency.ForEach(_m => Console.WriteLine("  " + _m));
+			Console.WriteLine("Mods found (" + result.SortedDependencies.Count + "):");
+			result.SortedDependencies.ForEach(_m => Console.WriteLine("  " + _m));
 			Console.WriteLine();
 
-			foreach (var modInfo in modsByDependency)
+			foreach (var modInfo in result.SortedDependencies)
 			{
 				Console.WriteLine("Loading mod: " + modLoaderContext.Id + ":" + modInfo.Id);
-				
+
 				var instantiatedMod = defaultModLoader.Load(modInfo);
 				var modContext = new ModContext(instantiatedMod, modInfo.Id, modInfo.Dependencies);
 
@@ -69,59 +67,6 @@ namespace ModApiTest
 				modContext.Extractors.ForEach(_ex => Console.WriteLine("  " + _ex));
 				Console.WriteLine();
 			}
-		}
-
-		private struct ModAndDependencies
-		{
-			public readonly ModInfo Mod;
-			public readonly HashSet<string> UnresolvedDependencies;
-
-			public ModAndDependencies(ModInfo _mod, IEnumerable<string> _unresolvedDependencies)
-			{
-				Mod = _mod;
-				UnresolvedDependencies = new HashSet<string>(_unresolvedDependencies);
-			}
-		}
-
-		private static List<ModInfo> SortModsByDependency(IEnumerable<ModInfo> _mods)
-		{
-			var modsWithDependencies = _mods.Select(_m => new ModAndDependencies(_m, _m.Dependencies)).ToList();
-
-			var sortedMods = new List<ModInfo>();
-
-			while (modsWithDependencies.Any())
-			{
-				var groupByResolved = modsWithDependencies.ToLookup(_m => !_m.UnresolvedDependencies.Any());
-				var withoutUnresolvedDependencies = groupByResolved[true].Select(_m => _m.Mod).ToList();
-
-				if (withoutUnresolvedDependencies.Any())
-				{
-					withoutUnresolvedDependencies.Sort((_lhs, _rhs) => string.Compare(_lhs.Id, _rhs.Id, StringComparison.Ordinal));
-					sortedMods.AddRange(withoutUnresolvedDependencies);
-
-					var resolvedModIds = withoutUnresolvedDependencies.Select(_m => _m.Id);
-					modsWithDependencies = groupByResolved[false]
-						.Select(_m => new ModAndDependencies(_m.Mod, _m.UnresolvedDependencies.Except(resolvedModIds)))
-						.ToList();
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			if (modsWithDependencies.Any())
-			{
-				Console.WriteLine("Mods with dependency cycles detected:");
-				modsWithDependencies.ForEach(_m =>
-				{
-					Console.WriteLine(_m.Mod);
-					Console.WriteLine("Unresolved: " + string.Join(", ", _m.UnresolvedDependencies));
-				});
-				Console.WriteLine();
-			}
-
-			return sortedMods;
 		}
 	}
 }
