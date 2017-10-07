@@ -5,40 +5,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-public class DefinitionConverter : JsonConverter
-{
-    public override void WriteJson(JsonWriter _writer, object _value, JsonSerializer _serializer)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override object ReadJson(JsonReader _reader,
-                                    Type _objectType,
-                                    object _existingValue,
-                                    JsonSerializer _serializer)
-    {
-        var jsonObject = JObject.Load(_reader);
-        var displayName = jsonObject["DisplayName"].Value<string>();
-        var model = jsonObject["Model"].Value<string>();
-        var texture = jsonObject["Texture"].Value<string>();
-
-        var snapPoints = jsonObject["SnapPoints"]
-            .Select(_jSnapPoint => _serializer.Deserialize<SnapPoint>(_jSnapPoint.CreateReader())).ToList();
-
-        return new Definition(displayName, model, texture, snapPoints);
-    }
-
-    public override bool CanConvert(Type _objectType)
-    {
-        return typeof(Definition) == _objectType;
-    }
-
-    public override bool CanWrite
-    {
-        get { return false; }
-    }
-}
-
 public class SnapPointConverter : JsonConverter
 {
     public override void WriteJson(JsonWriter _writer, object _value, JsonSerializer _serializer)
@@ -80,17 +46,50 @@ public class Definition
     public string Texture { get; private set; }
     public List<SnapPoint> SnapPoints { get; private set; }
 
-    public Definition(string _displayName, string _model, string _texture, List<SnapPoint> _snapPoints)
+    public Definition(string DisplayName, string Model, string Texture, List<SnapPoint> SnapPoints)
     {
-        DisplayName = _displayName;
-        Model = _model;
-        Texture = _texture;
-        SnapPoints = _snapPoints;
+        if (DisplayName == null) throw new ArgumentNullException("DisplayName");
+        if (Model == null) throw new ArgumentNullException("Model");
+        if (Texture == null) throw new ArgumentNullException("Texture");
+        if (SnapPoints == null) throw new ArgumentNullException("SnapPoints");
+        
+        this.DisplayName = DisplayName;
+        this.Model = Model;
+        this.Texture = Texture;
+        this.SnapPoints = SnapPoints;
     }
 
     public override string ToString()
     {
         return string.Format("DisplayName: {0}, Model: {1}, Texture: {2}, SnapPoints: {3}", DisplayName, Model, Texture, SnapPoints);
+    }
+
+    protected bool Equals(Definition _other)
+    {
+        return string.Equals(DisplayName, _other.DisplayName) &&
+               string.Equals(Model, _other.Model) &&
+               string.Equals(Texture, _other.Texture) &&
+               SnapPoints.SequenceEqual(_other.SnapPoints);
+    }
+
+    public override bool Equals(object _obj)
+    {
+        if (ReferenceEquals(null, _obj)) return false;
+        if (ReferenceEquals(this, _obj)) return true;
+        if (_obj.GetType() != GetType()) return false;
+        return Equals((Definition) _obj);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            var hashCode = DisplayName.GetHashCode();
+            hashCode = (hashCode * 397) ^ Model.GetHashCode();
+            hashCode = (hashCode * 397) ^ Texture.GetHashCode();
+            hashCode = (hashCode * 397) ^ SnapPoints.GetHashCode();
+            return hashCode;
+        }
     }
 }
 
@@ -116,7 +115,10 @@ public class SnapPoint
 
     protected bool Equals(SnapPoint _other)
     {
-        return string.Equals(Name, _other.Name) && Position.Equals(_other.Position) && Rotation.Equals(_other.Rotation) && Equals(ConnectsTo, _other.ConnectsTo);
+        return string.Equals(Name, _other.Name) &&
+               Position.Equals(_other.Position) &&
+               Rotation.Equals(_other.Rotation) &&
+               ConnectsTo.SequenceEqual(_other.ConnectsTo);
     }
 
     public override bool Equals(object _obj)
@@ -134,10 +136,10 @@ public class SnapPoint
     {
         unchecked
         {
-            var hashCode = Name != null ? Name.GetHashCode() : 0;
+            var hashCode = Name.GetHashCode();
             hashCode = (hashCode * 397) ^ Position.GetHashCode();
             hashCode = (hashCode * 397) ^ Rotation.GetHashCode();
-            hashCode = (hashCode * 397) ^ (ConnectsTo != null ? ConnectsTo.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ ConnectsTo.GetHashCode();
             return hashCode;
         }
     }

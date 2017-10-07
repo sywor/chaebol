@@ -70,10 +70,8 @@ public class TypeRegistry : ScriptableObject
         foreach (var resource in resources)
         {
             var jsonDefinition = File.ReadAllText(resource.Definition.ToString());
-            CreatePlaceable(resource,
-                            JsonConvert.DeserializeObject<Definition>(jsonDefinition,
-                                                                      new DefinitionConverter(),
-                                                                      new SnapPointConverter()));
+            CreatePlaceable(resource, JsonConvert.DeserializeObject<Definition>(jsonDefinition,
+                                                                                new SnapPointConverter()));
         }
     }
 
