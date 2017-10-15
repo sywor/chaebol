@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using ModApi;
-using ModApi.Attributes;
+﻿using System.Linq;
 using NUnit.Framework;
 
 public class ModApiTest
